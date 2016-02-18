@@ -1,0 +1,37 @@
+{
+  "name": "mcore-weui",
+  "version": "1.0.0",
+  "description": "基于微信UI的mcore样式库",
+  "main": "dist/mcore-weui.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vfasky/mcore-weui.git"
+  },
+  "keywords": [
+    "mcore",
+    "weui"
+  ],
+  "author": "vfasky",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vfasky/mcore-weui/issues"
+  },
+  "homepage": "https://github.com/vfasky/mcore-weui#readme",
+  "dependencies": {
+    "h2svd-loader": "^1.0.13",
+    "weui": "^0.3.0"
+  },
+  "devDependencies": {
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.10.0",
+    "css-loader": "^0.23.1",
+    "less": "^2.6.0",
+    "less-loader": "^2.2.2",
+    "mcoreapp": "^2.0.2",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.13"
+  }
+}

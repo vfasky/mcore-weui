@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mcore-weui Example</title>
+</head>
+<body>
+
+    <script src="https://staticfile.qnssl.com/require.js/2.1.22/require.min.js"></script>
+    <script>
+        requirejs.config({
+            map: {
+                '*': {'mcore': 'mcoreapp'},
+            },
+            paths:{
+                //'mcoreapp': '../node_modules/mcoreapp/dist/mcoreApp',
+                //'mcore-weui': '../dist/mcore-weui',
+                'jquery': 'https://staticfile.qnssl.com/jquery/2.1.4/jquery.min',
+                'demo': '../dist/demo',
+            }
+        });
+
+        requirejs(['demo']);
+    </script>
+</body>
+</html>

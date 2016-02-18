@@ -1,0 +1,15 @@
+<div class="weui_cells weui_cells_access" >
+
+    <a class="weui_cell"
+       mc-for="v in scope.list"
+       mc-href="v.url ? v.url : 'javascript:;'">
+        <div class="weui_cell_hd" mc-if="v.img">
+            <img mc-src="v.img" alt="" style="width:20px;margin-right:5px;display:block">
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>{v.title}</p>
+        </div>
+        <div class="weui_cell_ft" mc-if="v.url">{v.desc || ''}</div>
+    </a>
+
+</div>
