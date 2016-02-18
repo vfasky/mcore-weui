@@ -276,7 +276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			
 			/**
-			 * 修改自 simple-virtual-dom 
+			 * 修改自 simple-virtual-dom
 			 * @date 2016-01-21 19:34:48
 			 */
 			'use strict';
@@ -1267,7 +1267,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			  if (el._element && el._element.setAttribute && !noHash) {
 			    return el._element.setAttribute(el, attrName, value);
 			  } else {
-			    return el.setAttribute(attrName, value);
+			    if (exports.isString(value) || exports.isNumber(value)) {
+			      return el.setAttribute(attrName, value);
+			    }
 			  }
 			};
 
@@ -1537,12 +1539,17 @@ return /******/ (function(modules) { // webpackBootstrap
 			};
 
 			applyPatches = function(node, currentPatches) {
-			  var currentPatch, j, len1;
+			  var currentPatch, j, len1, newNode;
 			  for (j = 0, len1 = currentPatches.length; j < len1; j++) {
 			    currentPatch = currentPatches[j];
 			    switch (currentPatch.type) {
 			      case REPLACE:
-			        node.parentNode.replaceChild(currentPatch.node.render(), node);
+			        if (typeof currentPatch.node === 'string') {
+			          newNode = document.createTextNode(currentPatch.node);
+			        } else {
+			          newNode = currentPatch.node.render();
+			        }
+			        node.parentNode.replaceChild(newNode, node);
 			        break;
 			      case REORDER:
 			        reorderChildren(node, currentPatch.moves);
@@ -2265,11 +2272,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return;
 		  }
 
-		  App.prototype.route = function(path, viewName) {
+		  App.prototype.route = function(path, view) {
 		    var self;
 		    self = this;
 		    this.router.add(path, function() {
-		      return self.runView(viewName, this, arguments);
+		      return self.runView(view, this, arguments);
 		    });
 		    return this;
 		  };
