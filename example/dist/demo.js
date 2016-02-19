@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	app = new App($('body'));
 
-	app.route('/button', __webpack_require__(54)).route('/cells-radio', __webpack_require__(60)).route('*', __webpack_require__(56));
+	app.route('/button', __webpack_require__(56)).route('/cells-radio', __webpack_require__(58)).route('/cells-checkbox', __webpack_require__(64)).route('*', __webpack_require__(60));
 
 	app.run();
 
@@ -1845,7 +1845,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			 * @link http://vfasky.com
 			 */
 			'use strict';
-			var util;
+			var util,
+			  slice = [].slice,
+			  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 			util = __webpack_require__(6);
 
@@ -1861,6 +1863,20 @@ return /******/ (function(modules) { // webpackBootstrap
 			    len = 1;
 			  }
 			  return Number(x).toFixed(len);
+			};
+
+
+			/*
+			## in 是否在指参数中
+			```html
+			<span mc-show="scope.id | in 1 2 3"></span>
+			```
+			 */
+
+			exports['in'] = function() {
+			  var arr, x;
+			  x = arguments[0], arr = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+			  return indexOf.call(arr, x) >= 0;
 			};
 
 
@@ -3171,11 +3187,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author vfasky <vfasky@gmail.com>
 	 */
 	'use strict';
+	var Template;
+
 	__webpack_require__(48);
+
+	Template = __webpack_require__(45).Template;
 
 	module.exports = {
 	  Cells: __webpack_require__(52),
-	  CellsRadio: __webpack_require__(58)
+	  CellsRadio: __webpack_require__(54),
+	  CellsCheckbox: __webpack_require__(62)
 	};
 
 
@@ -3760,6 +3781,234 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	
 	/**
+	 * # 单选列表
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var CellsRadio, Component, Template, ref, util,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	ref = __webpack_require__(45), Template = ref.Template, Component = ref.Component, util = ref.util;
+
+	CellsRadio = (function(superClass) {
+	  extend(CellsRadio, superClass);
+
+	  function CellsRadio() {
+	    return CellsRadio.__super__.constructor.apply(this, arguments);
+	  }
+
+	  CellsRadio.prototype.init = function() {
+	    return this.render(__webpack_require__(55));
+	  };
+
+	  CellsRadio.prototype.watch = function() {
+	    this.on('change:list', (function(_this) {
+	      return function(list) {
+	        if (false === util.isArray(list)) {
+	          return;
+	        }
+	        return _this.set('list', list);
+	      };
+	    })(this));
+	    this.on('change:value', (function(_this) {
+	      return function(value) {
+	        return _this.set('value', value);
+	      };
+	    })(this));
+	    return this.on('change:name', (function(_this) {
+	      return function(name) {
+	        return _this.set('name', name);
+	      };
+	    })(this));
+	  };
+
+	  CellsRadio.prototype.changeValue = function(event, el, value) {
+	    this.set('value', value);
+	    return this.emitEvent('change-value', arguments);
+	  };
+
+	  return CellsRadio;
+
+	})(Component);
+
+	Template.components['cells-radio'] = CellsRadio;
+
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells weui_cells_radio" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells weui_cells_radio';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+
+	            // for v in scope.list
+	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
+	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
+	                var v = __mc__arr[__mc__$ix_];
+	                // <label class="weui_cell weui_check_label" />
+	                var __mc__children_2 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell weui_check_label';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 3
+
+	                    // <div class="weui_cell_bd weui_cell_primary" />
+	                    var __mc__children_3 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 4
+
+	                        // <p/>
+	                        var __mc__children_4 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        (function(scope, tree) { // startTree 5
+
+	                            var __mc__rp__key_0;
+	                            __mc__rp__key_0 = v.title;
+	                            tree.push("" + __mc__rp__key_0 + "");
+	                        })(scope, __mc__children_4); // endTree 5
+	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_4);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    })(scope, __mc__children_3); // endTree 4
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                    // <div class="weui_cell_ft" />
+	                    var __mc__children_6 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_ft';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 7
+
+	                        // <input type="radio"  class="weui_check"  mc-name="scope.name || ''"  mc-checked="v.value == scope.value"  mc-on-change="changeValue(v.value)"  mc-value="v.value" />
+	                        var __mc__children_7 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['type'] = 'radio';
+	                        __mc__attr['class'] = 'weui_check';
+	                        __mc__attr['name'] = (function(x) {
+	                            return x;
+	                        })(scope.name || '');
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
+	                        __mc__attr['checked'] = v.value == scope.value;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
+	                        __mc__attr['on-change'] = ['changeValue', v.value];
+	                        __mc__attr['value'] = v.value;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_7);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                        // <span class="weui_icon_checked" />
+	                        var __mc__children_8 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['class'] = 'weui_icon_checked';
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        var __mc__new_el = new __mc_T_El('span', __mc__attr, __mc__children_8);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    })(scope, __mc__children_6); // endTree 7
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_2); // endTree 3
+	                var __mc__new_el = new __mc_T_El('label', __mc__attr, __mc__children_2);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            } // endFor 
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
 	 * 按钮
 	 * @author vfasky <vfasky@gmail.com>
 	 */
@@ -3778,7 +4027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  Button.prototype.run = function() {
-	    return this.render(__webpack_require__(55));
+	    return this.render(__webpack_require__(57));
 	  };
 
 	  return Button;
@@ -3791,7 +4040,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4019,7 +4268,150 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 56 */
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 单选列表
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var CellsRadio, View,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	CellsRadio = (function(superClass) {
+	  extend(CellsRadio, superClass);
+
+	  function CellsRadio() {
+	    return CellsRadio.__super__.constructor.apply(this, arguments);
+	  }
+
+	  CellsRadio.prototype.run = function() {
+	    return this.render(__webpack_require__(59), {
+	      list: [
+	        {
+	          title: 'test 0',
+	          value: 0
+	        }, {
+	          title: 'test 1',
+	          value: 1
+	        }
+	      ]
+	    });
+	  };
+
+	  CellsRadio.prototype.changeValue = function(event, el, value) {
+	    return console.log(value);
+	  };
+
+	  return CellsRadio;
+
+	})(View);
+
+	module.exports = CellsRadio;
+
+	module.exports.viewName = 'cellsRadio';
+
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui 单选列表');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <cells-radio name="test"  value="1"  mc-on-change-value="changeValue"  mc-list="scope.list" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['name'] = 'test';
+	        __mc__attr['value'] = '1';
+	        __mc__attr['on-change-value'] = 'changeValue';
+	        __mc__attr['list'] = scope.list;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
+	        __mc__attr['key'] = __mc__dom_id++;
+	        var __mc__new_el = new __mc_T_El('cells-radio', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4042,7 +4434,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  Home.prototype.run = function() {
-	    return this.render(__webpack_require__(57), {
+	    return this.render(__webpack_require__(61), {
 	      list: [
 	        {
 	          url: '#/button',
@@ -4051,6 +4443,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, {
 	          url: '#/cells-radio',
 	          title: '单选列表'
+	        }, {
+	          url: '#/cells-checkbox',
+	          title: '复选列表'
 	        }
 	      ]
 	    });
@@ -4066,7 +4461,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 57 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4156,33 +4551,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 58 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
 	/**
-	 * # 单选列表
+	 *
+	 * # 复选框
 	 * @author vfasky <vfasky@gmail.com>
 	 */
 	'use strict';
-	var CellsRadio, Component, Template, ref, util,
+	var CellsCheckbox, Component, Template, ref, util,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
+	  hasProp = {}.hasOwnProperty,
+	  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 	ref = __webpack_require__(45), Template = ref.Template, Component = ref.Component, util = ref.util;
 
-	CellsRadio = (function(superClass) {
-	  extend(CellsRadio, superClass);
+	CellsCheckbox = (function(superClass) {
+	  extend(CellsCheckbox, superClass);
 
-	  function CellsRadio() {
-	    return CellsRadio.__super__.constructor.apply(this, arguments);
+	  function CellsCheckbox() {
+	    return CellsCheckbox.__super__.constructor.apply(this, arguments);
 	  }
 
-	  CellsRadio.prototype.init = function() {
-	    return this.render(__webpack_require__(59));
+	  CellsCheckbox.prototype.init = function() {
+	    return this.render(__webpack_require__(63));
 	  };
 
-	  CellsRadio.prototype.watch = function() {
+	  CellsCheckbox.prototype.watch = function() {
 	    this.on('change:list', (function(_this) {
 	      return function(list) {
 	        if (false === util.isArray(list)) {
@@ -4193,6 +4590,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    })(this));
 	    this.on('change:value', (function(_this) {
 	      return function(value) {
+	        if (false === util.isArray(value)) {
+	          return;
+	        }
 	        return _this.set('value', value);
 	      };
 	    })(this));
@@ -4203,20 +4603,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    })(this));
 	  };
 
-	  CellsRadio.prototype.changeValue = function(event, el, value) {
+	  CellsCheckbox.prototype.changeValue = function(event, el, val) {
+	    var ix, value;
+	    value = this.get('value');
+	    if (el.checked) {
+	      if ((indexOf.call(value, val) < 0)) {
+	        value.push(val);
+	      }
+	    } else {
+	      ix = value.indexOf(val);
+	      if (ix > -1) {
+	        value.splice(ix, 1);
+	      }
+	    }
 	    this.set('value', value);
-	    return this.emitEvent('change-value', arguments);
+	    return this.emitEvent('change-value', [event, el, value]);
 	  };
 
-	  return CellsRadio;
+	  return CellsCheckbox;
 
 	})(Component);
 
-	Template.components['cells-radio'] = CellsRadio;
+	Template.components['cells-checkbox'] = CellsCheckbox;
 
 
 /***/ },
-/* 59 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4265,12 +4677,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    (function(scope, tree) { // startTree 0
 
-	        // <div class="weui_cells weui_cells_radio" />
+	        // <div class="weui_cells weui_cells_checkbox" />
 	        var __mc__children_0 = [],
 	            __mc__attr = {},
 	            __mc__isBindObserve = false,
 	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells weui_cells_radio';
+	        __mc__attr['class'] = 'weui_cells weui_cells_checkbox';
 	        __mc__attr['key'] = __mc__dom_id++;
 	        (function(scope, tree) { // startTree 1
 
@@ -4288,69 +4700,71 @@ return /******/ (function(modules) { // webpackBootstrap
 	                __mc__attr['key'] = __mc__dom_id++;
 	                (function(scope, tree) { // startTree 3
 
-	                    // <div class="weui_cell_bd weui_cell_primary" />
+	                    // <div class="weui_cell_hd" />
 	                    var __mc__children_3 = [],
 	                        __mc__attr = {},
 	                        __mc__isBindObserve = false,
 	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
+	                    __mc__attr['class'] = 'weui_cell_hd';
 	                    __mc__attr['key'] = __mc__dom_id++;
 	                    (function(scope, tree) { // startTree 4
 
-	                        // <p/>
+	                        // <input type="checkbox"  class="weui_check"  mc-name="scope.name || ''"  mc-value="v.value"  mc-on-change="changeValue(v.value)"  mc-checked="scope.value.indexOf(v.value) != -1" />
 	                        var __mc__children_4 = [],
 	                            __mc__attr = {},
 	                            __mc__isBindObserve = false,
 	                            __mc__binderData = [];
+	                        __mc__attr['type'] = 'checkbox';
+	                        __mc__attr['class'] = 'weui_check';
+	                        __mc__attr['name'] = (function(x) {
+	                            return x;
+	                        })(scope.name || '');
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
+	                        __mc__attr['value'] = v.value;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
+	                        __mc__attr['on-change'] = ['changeValue', v.value];
+	                        __mc__attr['checked'] = scope.value.indexOf(v.value) != -1;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
 	                        __mc__attr['key'] = __mc__dom_id++;
-	                        (function(scope, tree) { // startTree 5
-
-	                            var __mc__rp__key_0;
-	                            __mc__rp__key_0 = v.title;
-	                            tree.push("" + __mc__rp__key_0 + "");
-	                        })(scope, __mc__children_4); // endTree 5
-	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_4);
+	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_4);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                        // <i class="weui_icon_checked" />
+	                        var __mc__children_5 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['class'] = 'weui_icon_checked';
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        var __mc__new_el = new __mc_T_El('i', __mc__attr, __mc__children_5);
 	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	                        tree.push(__mc__new_el);
 	                    })(scope, __mc__children_3); // endTree 4
 	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
 	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	                    tree.push(__mc__new_el);
-	                    // <div class="weui_cell_ft" />
+	                    // <div class="weui_cell_bd weui_cell_primary" />
 	                    var __mc__children_6 = [],
 	                        __mc__attr = {},
 	                        __mc__isBindObserve = false,
 	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_ft';
+	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
 	                    __mc__attr['key'] = __mc__dom_id++;
 	                    (function(scope, tree) { // startTree 7
 
-	                        // <input type="radio"  class="weui_check"  mc-name="scope.name"  mc-checked="v.value == scope.value"  mc-on-change="changeValue(v.value)"  mc-value="v.value" />
+	                        // <p/>
 	                        var __mc__children_7 = [],
 	                            __mc__attr = {},
 	                            __mc__isBindObserve = false,
 	                            __mc__binderData = [];
-	                        __mc__attr['type'] = 'radio';
-	                        __mc__attr['class'] = 'weui_check';
-	                        __mc__attr['name'] = scope.name;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
-	                        __mc__attr['checked'] = v.value == scope.value;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
-	                        __mc__attr['on-change'] = ['changeValue', v.value];
-	                        __mc__attr['value'] = v.value;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
 	                        __mc__attr['key'] = __mc__dom_id++;
-	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_7);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                        // <span class="weui_icon_checked" />
-	                        var __mc__children_8 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['class'] = 'weui_icon_checked';
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        var __mc__new_el = new __mc_T_El('span', __mc__attr, __mc__children_8);
+	                        (function(scope, tree) { // startTree 8
+
+	                            var __mc__rp__key_0;
+	                            __mc__rp__key_0 = v.title;
+	                            tree.push("" + __mc__rp__key_0 + "");
+	                        })(scope, __mc__children_7); // endTree 8
+	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_7);
 	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	                        tree.push(__mc__new_el);
 	                    })(scope, __mc__children_6); // endTree 7
@@ -4382,30 +4796,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 60 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
 	/**
-	 * 单选列表
+	 * 复选列表
 	 * @author vfasky <vfasky@gmail.com>
 	 */
 	'use strict';
-	var CellsRadio, View,
+	var CellsCheckbox, View,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 
 	View = __webpack_require__(45).View;
 
-	CellsRadio = (function(superClass) {
-	  extend(CellsRadio, superClass);
+	CellsCheckbox = (function(superClass) {
+	  extend(CellsCheckbox, superClass);
 
-	  function CellsRadio() {
-	    return CellsRadio.__super__.constructor.apply(this, arguments);
+	  function CellsCheckbox() {
+	    return CellsCheckbox.__super__.constructor.apply(this, arguments);
 	  }
 
-	  CellsRadio.prototype.run = function() {
-	    return this.render(__webpack_require__(61), {
+	  CellsCheckbox.prototype.run = function() {
+	    return this.render(__webpack_require__(65), {
 	      list: [
 	        {
 	          title: 'test 0',
@@ -4413,26 +4827,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, {
 	          title: 'test 1',
 	          value: 1
+	        }, {
+	          title: 'test 2',
+	          value: 2
 	        }
-	      ]
+	      ],
+	      value: [1, 2]
 	    });
 	  };
 
-	  CellsRadio.prototype.changeValue = function(event, el, value) {
+	  CellsCheckbox.prototype.changeValue = function(event, el, value) {
 	    return console.log(value);
 	  };
 
-	  return CellsRadio;
+	  return CellsCheckbox;
 
 	})(View);
 
-	module.exports = CellsRadio;
+	module.exports = CellsCheckbox;
 
-	module.exports.viewName = 'cellsRadio';
+	module.exports.viewName = 'cellsCheckbox';
 
 
 /***/ },
-/* 61 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4490,23 +4908,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __mc__attr['key'] = __mc__dom_id++;
 	        (function(scope, tree) { // startTree 1
 
-	            tree.push('weui 单选列表');
+	            tree.push('weui 复选列表');
 	        })(scope, __mc__children_0); // endTree 1
 	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
 	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	        tree.push(__mc__new_el);
-	        // <cells-radio name="test"  value="1"  mc-on-change-value="changeValue"  mc-list="scope.list" />
+	        // <cells-checkbox name="test"  mc-value="scope.value"  mc-on-change-value="changeValue"  mc-list="scope.list" />
 	        var __mc__children_2 = [],
 	            __mc__attr = {},
 	            __mc__isBindObserve = false,
 	            __mc__binderData = [];
 	        __mc__attr['name'] = 'test';
-	        __mc__attr['value'] = '1';
+	        __mc__attr['value'] = scope.value;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
 	        __mc__attr['on-change-value'] = 'changeValue';
 	        __mc__attr['list'] = scope.list;
 	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
 	        __mc__attr['key'] = __mc__dom_id++;
-	        var __mc__new_el = new __mc_T_El('cells-radio', __mc__attr, __mc__children_2);
+	        var __mc__new_el = new __mc_T_El('cells-checkbox', __mc__attr, __mc__children_2);
 	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	        tree.push(__mc__new_el);
 	    })(scope, __mc__children_0); // endTree 0

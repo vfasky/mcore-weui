@@ -12,6 +12,7 @@ app = new App $('body')
 
 app.route '/button', require './button'
    .route '/cells-radio', require './cellsRadio'
+   .route '/cells-checkbox', require './cellsCheckbox'
    .route '*', require './home'
 
 app.run()

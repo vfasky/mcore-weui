@@ -19,6 +19,10 @@ class Home extends View
                     url: '#/cells-radio'
                     title: '单选列表'
                 }
+                {
+                    url: '#/cells-checkbox'
+                    title: '复选列表'
+                }
             ]
 
 
