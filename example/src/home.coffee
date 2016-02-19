@@ -16,8 +16,8 @@ class Home extends View
                     desc: '直接调用，没有封装'
                 }
                 {
-                    url: '#/cell'
-                    title: '列表'
+                    url: '#/cells-radio'
+                    title: '单选列表'
                 }
             ]
 

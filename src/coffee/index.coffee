@@ -9,3 +9,4 @@ require '../style/weui.less'
 
 module.exports =
     Cells: require './cells'
+    CellsRadio: require './cellsRadio'

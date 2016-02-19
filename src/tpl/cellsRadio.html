@@ -1,0 +1,18 @@
+<div class="weui_cells weui_cells_radio">
+
+    <label class="weui_cell weui_check_label"
+           mc-for="v in scope.list">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>{v.title}</p>
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio" class="weui_check"
+                   mc-name="scope.name"
+                   mc-checked="v.value == scope.value"
+                   mc-on-change="changeValue(v.value)"
+                   mc-value="v.value">
+            <span class="weui_icon_checked"></span>
+        </div>
+    </label>
+
+</div>

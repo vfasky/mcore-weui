@@ -9,7 +9,7 @@
 class Cells extends Component
 
     init: ->
-        @render require('../tpl/cell.html')
+        @render require('../tpl/cells.html')
 
     watch: ->
         @on 'change:list', (list)=>
