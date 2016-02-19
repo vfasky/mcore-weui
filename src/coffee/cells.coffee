@@ -17,3 +17,5 @@ class Cells extends Component
             @set 'list', list
 
 Template.components['cells'] = Cells
+
+module.exports = Cells

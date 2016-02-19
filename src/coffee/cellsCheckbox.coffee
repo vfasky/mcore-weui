@@ -11,7 +11,7 @@
 class CellsCheckbox extends Component
 
     init: ->
-        @render require('../tpl/CellsCheckbox.html')
+        @render require('../tpl/cellsCheckbox.html')
 
     watch: ->
         @on 'change:list', (list)=>
@@ -36,3 +36,5 @@ class CellsCheckbox extends Component
 
 
 Template.components['cells-checkbox'] = CellsCheckbox
+
+module.exports = CellsCheckbox

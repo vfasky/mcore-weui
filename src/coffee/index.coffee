@@ -13,3 +13,4 @@ module.exports =
     Cells: require './cells'
     CellsRadio: require './cellsRadio'
     CellsCheckbox: require './cellsCheckbox'
+    CellsSwitch: require './cellsSwitch'

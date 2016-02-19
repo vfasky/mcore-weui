@@ -24,7 +24,7 @@ module.exports = {
             loader: "coffee-loader"
         }, {
             test: /\.less$/,
-            loader: "style!css!less"
+            loader: "style!css!autoprefixer?browsers=last 2 version!less"
         }]
     },
     externals: ['mcore']

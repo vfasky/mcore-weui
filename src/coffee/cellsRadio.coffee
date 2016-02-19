@@ -27,3 +27,5 @@ class CellsRadio extends Component
 
 
 Template.components['cells-radio'] = CellsRadio
+
+module.exports = CellsRadio

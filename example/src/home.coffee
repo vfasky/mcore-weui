@@ -23,6 +23,10 @@ class Home extends View
                     url: '#/cells-checkbox'
                     title: '复选列表'
                 }
+                {
+                    url: '#/cells-switch'
+                    title: '多选开关'
+                }
             ]
 
 

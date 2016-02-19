@@ -1,0 +1,13 @@
+<div class="weui_cells weui_cells_form">
+    <div class="weui_cell weui_cell_switch" mc-for="v in scope.list">
+        <div class="weui_cell_hd weui_cell_primary">{v.title}</div>
+        <div class="weui_cell_ft">
+            <input class="weui_switch"
+                   mc-name="scope.name || ''"
+                   mc-value="v.value"
+                   mc-on-change="changeValue(v.value)"
+                   mc-checked="scope.value.indexOf(v.value) != -1"
+                   type="checkbox">
+        </div>
+    </div>
+</div>

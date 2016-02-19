@@ -21,7 +21,7 @@ module.exports = {
             loader: "coffee-loader"
         }, {
             test: /\.less$/,
-            loader: "style!css!less"
+            loader: "style!css!autoprefixer!less"
         }, {
             test: /\/tpl\/.*(\.html)$/,
             loader: 'h2svd-loader'
