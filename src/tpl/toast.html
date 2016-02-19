@@ -1,0 +1,13 @@
+<div mc-show="scope.show" mc-class="scope.type == 'loading' ? 'weui_loading_toast': ''">
+    <div class="weui_mask_transparent" mc-on-click="hide"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast" mc-if="scope.type != 'loading'"></i>
+
+        <div class="weui_loading" mc-if="scope.type == 'loading'">
+            <div mc-for="v in scope.loadingArr"
+                 mc-class="'weui_loading_leaf weui_loading_leaf_' + v"></div>
+        </div>
+
+        <p class="weui_toast_content" mc-html="scope.msg"></p>
+    </div>
+</div>

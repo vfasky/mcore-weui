@@ -19,3 +19,4 @@ module.exports =
     CellsCheckbox: require './cellsCheckbox'
     CellsSwitch: require './cellsSwitch'
     Validator: require './validator'
+    Toast: require './toast'

@@ -22,6 +22,9 @@ class Validator extends Component
 
             #TODO 点击时，添加弹窗提示
             $ft.find('.weui_icon_warn').attr 'title', @errData.err
+               .off('click.weui_validator')
+               .on 'click.weui_validator', =>
+                   false
 
         else
             $el.addClass 'weui_cell_warn'

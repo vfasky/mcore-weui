@@ -31,6 +31,11 @@ class Home extends View
                     url: '#/validator'
                     title: '表单验证'
                 }
+                {
+                    url: '#/toast'
+                    title: 'Toast'
+                    desc: '成功提示，及loading'
+                }
             ]
 
 
