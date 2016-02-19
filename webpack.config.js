@@ -24,8 +24,8 @@ module.exports = {
             loader: "coffee-loader"
         }, {
             test: /\.less$/,
-            loader: "style!css!autoprefixer?browsers=last 2 version!less"
+            loader: "style!css!autoprefixer!less"
         }]
     },
-    externals: ['mcore']
+    externals: ['mcore', 'jquery']
 };

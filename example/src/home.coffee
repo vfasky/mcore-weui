@@ -27,6 +27,10 @@ class Home extends View
                     url: '#/cells-switch'
                     title: '多选开关'
                 }
+                {
+                    url: '#/validator'
+                    title: '表单验证'
+                }
             ]
 
 

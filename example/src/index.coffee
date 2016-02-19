@@ -14,6 +14,7 @@ app.route '/button', require './button'
    .route '/cells-radio', require './cellsRadio'
    .route '/cells-checkbox', require './cellsCheckbox'
    .route '/cells-switch', require './cellsSwitch'
+   .route '/validator', require './validator'
    .route '*', require './home'
 
 app.run()

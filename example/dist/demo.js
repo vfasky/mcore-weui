@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	app = new App($('body'));
 
-	app.route('/button', __webpack_require__(60)).route('/cells-radio', __webpack_require__(62)).route('/cells-checkbox', __webpack_require__(64)).route('/cells-switch', __webpack_require__(66)).route('*', __webpack_require__(68));
+	app.route('/button', __webpack_require__(60)).route('/cells-radio', __webpack_require__(62)).route('/cells-checkbox', __webpack_require__(64)).route('/cells-switch', __webpack_require__(66)).route('/validator', __webpack_require__(72)).route('*', __webpack_require__(68));
 
 	app.run();
 
@@ -3187,17 +3187,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author vfasky <vfasky@gmail.com>
 	 */
 	'use strict';
-	var Template;
+	var mcore;
 
 	__webpack_require__(48);
 
-	Template = __webpack_require__(45).Template;
+	mcore = __webpack_require__(45);
+
+	__webpack_require__(70)(mcore);
 
 	module.exports = {
 	  Cells: __webpack_require__(52),
 	  CellsRadio: __webpack_require__(54),
 	  CellsCheckbox: __webpack_require__(56),
-	  CellsSwitch: __webpack_require__(58)
+	  CellsSwitch: __webpack_require__(58),
+	  Validator: __webpack_require__(74)
 	};
 
 
@@ -4525,112 +4528,111 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    (function(scope, tree) { // startTree 0
 
-	        // <a href="javascript:;"  class="weui_btn weui_btn_primary" />
+	        // <div class="weui_cells_title" />
 	        var __mc__children_0 = [],
 	            __mc__attr = {},
 	            __mc__isBindObserve = false,
 	            __mc__binderData = [];
-	        __mc__attr['href'] = 'javascript:;';
-	        __mc__attr['class'] = 'weui_btn weui_btn_primary';
+	        __mc__attr['class'] = 'weui_cells_title';
 	        __mc__attr['key'] = __mc__dom_id++;
 	        (function(scope, tree) { // startTree 1
 
-	            tree.push('按钮');
+	            tree.push('weui 按钮');
 	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_0);
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
 	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	        tree.push(__mc__new_el);
-	        // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_primary" />
+	        // <div class="weui_cells" />
 	        var __mc__children_2 = [],
 	            __mc__attr = {},
 	            __mc__isBindObserve = false,
 	            __mc__binderData = [];
-	        __mc__attr['href'] = 'javascript:;';
-	        __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_primary';
+	        __mc__attr['class'] = 'weui_cells';
 	        __mc__attr['key'] = __mc__dom_id++;
 	        (function(scope, tree) { // startTree 3
 
-	            tree.push('按钮');
-	        })(scope, __mc__children_2); // endTree 3
-	        var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_2);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <a href="javascript:;"  class="weui_btn weui_btn_warn" />
-	        var __mc__children_4 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['href'] = 'javascript:;';
-	        __mc__attr['class'] = 'weui_btn weui_btn_warn';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 5
+	            // <a href="javascript:;"  class="weui_btn weui_btn_primary" />
+	            var __mc__children_3 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_primary';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 4
 
-	            tree.push('确认');
-	        })(scope, __mc__children_4); // endTree 5
-	        var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_4);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_warn" />
-	        var __mc__children_6 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['href'] = 'javascript:;';
-	        __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_warn';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 7
+	                tree.push('按钮');
+	            })(scope, __mc__children_3); // endTree 4
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_3);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_primary" />
+	            var __mc__children_5 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_primary';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 6
 
-	            tree.push('确认');
-	        })(scope, __mc__children_6); // endTree 7
-	        var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_6);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <a href="javascript:;"  class="weui_btn weui_btn_default" />
-	        var __mc__children_8 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['href'] = 'javascript:;';
-	        __mc__attr['class'] = 'weui_btn weui_btn_default';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 9
+	                tree.push('按钮');
+	            })(scope, __mc__children_5); // endTree 6
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_5);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_warn" />
+	            var __mc__children_7 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_warn';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 8
 
-	            tree.push('按钮');
-	        })(scope, __mc__children_8); // endTree 9
-	        var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_8);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_default" />
-	        var __mc__children_10 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['href'] = 'javascript:;';
-	        __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_default';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 11
+	                tree.push('确认');
+	            })(scope, __mc__children_7); // endTree 8
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_7);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_warn" />
+	            var __mc__children_9 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_warn';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 10
 
-	            tree.push('按钮');
-	        })(scope, __mc__children_10); // endTree 11
-	        var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_10);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <div class="button_sp_area" />
-	        var __mc__children_12 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'button_sp_area';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 13
+	                tree.push('确认');
+	            })(scope, __mc__children_9); // endTree 10
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_9);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_default" />
+	            var __mc__children_11 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_default';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 12
 
-	            // <a href="javascript:;"  class="weui_btn weui_btn_plain_default" />
+	                tree.push('按钮');
+	            })(scope, __mc__children_11); // endTree 12
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_11);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_default" />
 	            var __mc__children_13 = [],
 	                __mc__attr = {},
 	                __mc__isBindObserve = false,
 	                __mc__binderData = [];
 	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_plain_default';
+	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_default';
 	            __mc__attr['key'] = __mc__dom_id++;
 	            (function(scope, tree) { // startTree 14
 
@@ -4639,53 +4641,81 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_13);
 	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	            tree.push(__mc__new_el);
-	            // <a href="javascript:;"  class="weui_btn weui_btn_plain_primary" />
+	            // <div class="button_sp_area" />
 	            var __mc__children_15 = [],
 	                __mc__attr = {},
 	                __mc__isBindObserve = false,
 	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_plain_primary';
+	            __mc__attr['class'] = 'button_sp_area';
 	            __mc__attr['key'] = __mc__dom_id++;
 	            (function(scope, tree) { // startTree 16
 
-	                tree.push('按钮');
+	                // <a href="javascript:;"  class="weui_btn weui_btn_plain_default" />
+	                var __mc__children_16 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['href'] = 'javascript:;';
+	                __mc__attr['class'] = 'weui_btn weui_btn_plain_default';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 17
+
+	                    tree.push('按钮');
+	                })(scope, __mc__children_16); // endTree 17
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_16);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <a href="javascript:;"  class="weui_btn weui_btn_plain_primary" />
+	                var __mc__children_18 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['href'] = 'javascript:;';
+	                __mc__attr['class'] = 'weui_btn weui_btn_plain_primary';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 19
+
+	                    tree.push('按钮');
+	                })(scope, __mc__children_18); // endTree 19
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_18);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <a href="javascript:;"  class="weui_btn weui_btn_mini weui_btn_primary" />
+	                var __mc__children_20 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['href'] = 'javascript:;';
+	                __mc__attr['class'] = 'weui_btn weui_btn_mini weui_btn_primary';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 21
+
+	                    tree.push('按钮');
+	                })(scope, __mc__children_20); // endTree 21
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_20);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <a href="javascript:;"  class="weui_btn weui_btn_mini weui_btn_default" />
+	                var __mc__children_22 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['href'] = 'javascript:;';
+	                __mc__attr['class'] = 'weui_btn weui_btn_mini weui_btn_default';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 23
+
+	                    tree.push('按钮');
+	                })(scope, __mc__children_22); // endTree 23
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_22);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
 	            })(scope, __mc__children_15); // endTree 16
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_15);
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_15);
 	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	            tree.push(__mc__new_el);
-	            // <a href="javascript:;"  class="weui_btn weui_btn_mini weui_btn_primary" />
-	            var __mc__children_17 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_mini weui_btn_primary';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 18
-
-	                tree.push('按钮');
-	            })(scope, __mc__children_17); // endTree 18
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_17);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	            // <a href="javascript:;"  class="weui_btn weui_btn_mini weui_btn_default" />
-	            var __mc__children_19 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_mini weui_btn_default';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 20
-
-	                tree.push('按钮');
-	            })(scope, __mc__children_19); // endTree 20
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_19);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	        })(scope, __mc__children_12); // endTree 13
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_12);
+	        })(scope, __mc__children_2); // endTree 3
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
 	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	        tree.push(__mc__new_el);
 	    })(scope, __mc__children_0); // endTree 0
@@ -5181,6 +5211,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, {
 	          url: '#/cells-switch',
 	          title: '多选开关'
+	        }, {
+	          url: '#/validator',
+	          title: '表单验证'
 	        }
 	      ]
 	    });
@@ -5284,6 +5317,928 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    return templateDefined;
 	};
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 表单验证
+	 * @date 2016-02-14 16:01:56
+	 * @author vfasky <vfasky@gmail.com>
+	 * @link http://vfasky.com
+	 */
+	'use strict';
+	var $, _errMsg, _isAlphabetReg, _isDateReg, _isEmailReg, _isMobileReg, _isTelReg, _rule, _urlCheck,
+	  slice = [].slice;
+
+	$ = __webpack_require__(46);
+
+	__webpack_require__(71);
+
+	_isAlphabetReg = /^[A-Za-z]+$/;
+
+	_isEmailReg = /^(?:[a-z0-9]+[_\-+.]+)*[a-z0-9]+@(?:([a-z0-9]+-?)*[a-z0-9]+.)+([a-z]{2,})+$/i;
+
+	_isDateReg = /^([1-2]\d{3})([-\/.])?(1[0-2]|0?[1-9])([-\/.])?([1-2]\d|3[01]|0?[1-9])$/;
+
+	_isMobileReg = /^1[3-9]\d{9}$/;
+
+
+	/**
+	 * 检查座机
+	 * 座机：仅中国座机支持；区号可有 3、4位数并且以 0 开头；电话号不以 0 开头，最 8 位数，最少 7 位数
+	 * 但 400/800 除头开外，适应电话，电话本身是 7 位数
+	 * 0755-29819991 | 0755 29819991 | 400-6927972 | 4006927927 | 800...
+	 *
+	 */
+
+	_isTelReg = /^(?:(?:0\d{2,3}[- ]?[1-9]\d{6,7})|(?:[48]00[- ]?[1-9]\d{6}))$/;
+
+	_urlCheck = (function() {
+	  var address, domain, domainType, ip, ipType, port, protocols, rDomain, rIP, userInfo;
+	  protocols = '((https?|s?ftp|irc[6s]?|git|afp|telnet|smb):\\/\\/)?';
+	  userInfo = '([a-z0-9]\\w*(\\:[\\S]+)?\\@)?';
+	  domain = '(?:localhost|(?:[a-z0-9]+(?:[-\\w]*[a-z0-9])?(?:\\.[a-z0-9][-\\w]*[a-z0-9])*)*\\.[a-z]{2,})';
+	  port = '(:\\d{1,5})?';
+	  ip = '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}';
+	  address = '(\\/\\S*)?';
+	  domainType = [protocols, userInfo, domain, port, address];
+	  ipType = [protocols, userInfo, ip, port, address];
+	  rDomain = new RegExp('^' + domainType.join('') + '$', 'i');
+	  rIP = new RegExp('^' + ipType.join('') + '$', 'i');
+	  return function(x) {
+	    return rDomain.test(x || rIP.test(x));
+	  };
+	})();
+
+	_rule = {
+	  required: function(x, rule) {
+	    if (x == null) {
+	      x = '';
+	    }
+	    if (rule == null) {
+	      rule = null;
+	    }
+	    if (rule === null) {
+	      return String(x).trim().length > 0;
+	    }
+	    if (x.$form.find(rule).val()) {
+	      return String(x).trim().length > 0;
+	    }
+	    return true;
+	  },
+	  isAlphabet: function(x) {
+	    return _isAlphabetReg.test(String(x));
+	  },
+	  minlength: function(x, len) {
+	    len = Number(len);
+	    x = String(x).trim();
+	    return x.length >= len;
+	  },
+	  maxlength: function(x, len) {
+	    len = Number(len);
+	    x = String(x).trim();
+	    return x.length <= len;
+	  },
+	  isNumber: function(x) {
+	    return $.isNumeric(String(x));
+	  },
+	  isInteger: function(x) {
+	    return Number(x) % 1 === 0;
+	  },
+	  min: function(x, min) {
+	    return Number(x) >= Number(min);
+	  },
+	  max: function(x, max) {
+	    return Number(x) <= Number(max);
+	  },
+	  equals: function(x, value) {
+	    if (value instanceof $) {
+	      value = value.val();
+	    }
+	    if (x instanceof $) {
+	      x = x.val();
+	    }
+	    return String(x) === String(value);
+	  },
+	  isEmail: function(x) {
+	    return _isEmailReg.test(String(x));
+	  },
+	  isDate: function(x) {
+	    var d, day, month, taste, year;
+	    if (_isDateReg.test(String(x))) {
+	      return false;
+	    }
+	    taste = _isDateReg.exec(String(x));
+	    year = Number(taste[1]);
+	    month = Number(taste[3] - 1);
+	    day = Number(taste[5]);
+	    d = new Date(year, month, day);
+	    return year === d.getFullYear() && month === d.getMonth() && day === d.getDate();
+	  },
+	  isMobile: function(x) {
+	    return _isMobileReg.test(String(x));
+	  },
+	  isTel: function(x) {
+	    return _isTelReg.test(String(x));
+	  },
+	  isUrl: function(x) {
+	    return _urlCheck(String(x));
+	  }
+	};
+
+	_errMsg = {
+	  required: '不能为空',
+	  isNumber: '只能是数字',
+	  isAlphabet: '只能是字母',
+	  minlength: function(len) {
+	    return "最小 " + len + " 位字符";
+	  },
+	  maxlength: function(len) {
+	    return "最多 " + len + " 位字符";
+	  },
+	  min: function(min) {
+	    return "数值要大于 " + min;
+	  },
+	  max: function(max) {
+	    return "数值要小于 " + max;
+	  },
+	  equals: '两次输入的值不相符',
+	  isEmail: '邮箱格式不正确',
+	  isInteger: '数值必须是整数',
+	  isDate: '日期格式不正确',
+	  isMobile: '手机格式不正确',
+	  isTel: '座机格式不正确'
+	};
+
+	module.exports = function(mcore) {
+	  var Template, getNameValue, getRules, parseValidator, util, validator;
+	  Template = mcore.Template, util = mcore.util;
+	  parseValidator = function($el, rules) {
+	    var name;
+	    if (rules == null) {
+	      rules = [];
+	    }
+	    name = $el.attr('name');
+	    if (!name) {
+	      return false;
+	    }
+	    return util.each($el.attr('validator').split('|'), function(v) {
+	      var args, checkRule, diyErr, eT, err, ix, msgArgs, ruleType;
+	      ix = String(v).indexOf(' err:');
+	      if (ix !== -1) {
+	        eT = v.split(' err:');
+	        v = eT[0];
+	        diyErr = eT[1];
+	      }
+	      args = $.grep(v.split(' '), (function(_this) {
+	        return function(s) {
+	          return $.trim(s).length > 0;
+	        };
+	      })(this));
+	      ruleType = args[0];
+	      checkRule = _rule[ruleType];
+	      if (!checkRule) {
+	        console.log("validator rule: " + ruleType + " undefined");
+	        return;
+	      }
+	      if (diyErr) {
+	        err = diyErr;
+	      } else {
+	        if ($.isFunction(_errMsg[ruleType])) {
+	          msgArgs = args.slice(0);
+	          msgArgs.splice(0, 1);
+	          err = _errMsg[ruleType].apply($el[0], msgArgs);
+	        } else {
+	          err = _errMsg[ruleType] || 'error';
+	        }
+	      }
+	      args[0] = $el;
+	      if (ruleType === 'equals') {
+	        args[1] = this.$el.find(args[1]).eq(0);
+	      }
+	      return rules.push({
+	        name: name,
+	        type: ruleType,
+	        rule: checkRule,
+	        args: args,
+	        err: err
+	      });
+	    });
+	  };
+	  getRules = function($form) {
+	    var rules;
+	    rules = [];
+	    $form.find('[validator]').each(function() {
+	      return parseValidator($(this), rules);
+	    });
+	    return rules;
+	  };
+	  getNameValue = function(data, name, $el) {
+	    name = String(name);
+	    if (-1 === name.indexOf('[')) {
+	      return data[name] || '';
+	    }
+	    return $el.val().trim();
+	  };
+	  Template.binders['validator'] = {
+	    rendered: function(el, value) {
+	      var $form, callback;
+	      if (el.tagName.toLowerCase() !== 'form' || !el._element) {
+	        return el.setAttribute('validator', value);
+	      }
+	      callback = Template.strToFun(el, value) || function() {};
+	      $form = $(el);
+	      return $form.off('submit.validator').on('submit.validator', function() {
+	        var data, err, rules;
+	        rules = getRules($form);
+	        data = $form.serializeObject();
+	        err = null;
+	        $.each(rules, function(k, v) {
+	          var $el, _value;
+	          $el = v.args[0];
+	          _value = getNameValue(data, v.name, $el);
+	          if (v.type !== 'required' && (_value === '' || _value === void 0)) {
+	            return;
+	          }
+	          value = {
+	            toString: function() {
+	              return String(_value);
+	            },
+	            toNumber: function() {
+	              return Number(_value);
+	            },
+	            $el: $el,
+	            $form: $form
+	          };
+	          v.args[0] = value;
+	          if (false === v.rule.apply(null, v.args)) {
+	            err = {
+	              $el: $el,
+	              err: v.err,
+	              $form: $form
+	            };
+	            return false;
+	          }
+	        });
+	        callback(err, data);
+	        return false;
+	      });
+	    }
+	  };
+	  return validator = {
+	    add: function(x, fun, errMsg) {
+	      _rule[x] = fun;
+	      if (errMsg) {
+	        return _errMsg[x] = errMsg;
+	      }
+	    },
+	    addErrMsg: function(type, msg) {
+	      return _errMsg[type] = msg;
+	    },
+	    check: function() {
+	      var args, type;
+	      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+	      if (args.length < 2) {
+	        return false;
+	      }
+	      type = args[0];
+	      args.splice(0, 1);
+	      if (!rule[type]) {
+	        return false;
+	      }
+	      return _rule[type].apply(null, args);
+	    }
+	  };
+	};
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+	 * jQuery serializeObject
+	 * @copyright 2014, macek <paulmacek@gmail.com>
+	 * @link https://github.com/macek/jquery-serialize-object
+	 * @license BSD
+	 * @version 2.5.0
+	 */
+	(function(root, factory) {
+
+	    // AMD
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(46)], __WEBPACK_AMD_DEFINE_RESULT__ = function(exports, $) {
+	            return factory(exports, $);
+	        }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    }
+
+	    // CommonJS
+	    else if (typeof exports !== "undefined") {
+	        var $ = require("jquery");
+	        factory(exports, $);
+	    }
+
+	    // Browser
+	    else {
+	        factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
+	    }
+
+	}(this, function(exports, $) {
+
+	    var patterns = {
+	        validate: /^[a-z_][a-z0-9_]*(?:\[(?:\d*|[a-z0-9_]+)\])*$/i,
+	        key: /[a-z0-9_]+|(?=\[\])/gi,
+	        push: /^$/,
+	        fixed: /^\d+$/,
+	        named: /^[a-z0-9_]+$/i
+	    };
+
+	    function FormSerializer(helper, $form) {
+
+	        // private variables
+	        var data = {},
+	            pushes = {};
+
+	        // private API
+	        function build(base, key, value) {
+	            base[key] = value;
+	            return base;
+	        }
+
+	        function makeObject(root, value) {
+
+	            var keys = root.match(patterns.key),
+	                k;
+
+	            // nest, nest, ..., nest
+	            while ((k = keys.pop()) !== undefined) {
+	                // foo[]
+	                if (patterns.push.test(k)) {
+	                    var idx = incrementPush(root.replace(/\[\]$/, ''));
+	                    value = build([], idx, value);
+	                }
+
+	                // foo[n]
+	                else if (patterns.fixed.test(k)) {
+	                    value = build([], k, value);
+	                }
+
+	                // foo; foo[bar]
+	                else if (patterns.named.test(k)) {
+	                    value = build({}, k, value);
+	                }
+	            }
+
+	            return value;
+	        }
+
+	        function incrementPush(key) {
+	            if (pushes[key] === undefined) {
+	                pushes[key] = 0;
+	            }
+	            return pushes[key]++;
+	        }
+
+	        function encode(pair) {
+	            switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
+	                case "checkbox":
+	                    return pair.value === "on" ? true : pair.value;
+	                default:
+	                    return pair.value;
+	            }
+	        }
+
+	        function addPair(pair) {
+	            if (!patterns.validate.test(pair.name)) return this;
+	            var obj = makeObject(pair.name, encode(pair));
+	            data = helper.extend(true, data, obj);
+	            return this;
+	        }
+
+	        function addPairs(pairs) {
+	            if (!helper.isArray(pairs)) {
+	                throw new Error("formSerializer.addPairs expects an Array");
+	            }
+	            for (var i = 0, len = pairs.length; i < len; i++) {
+	                this.addPair(pairs[i]);
+	            }
+	            return this;
+	        }
+
+	        function serialize() {
+	            return data;
+	        }
+
+	        function serializeJSON() {
+	            return JSON.stringify(serialize());
+	        }
+
+	        // public API
+	        this.addPair = addPair;
+	        this.addPairs = addPairs;
+	        this.serialize = serialize;
+	        this.serializeJSON = serializeJSON;
+	    }
+
+	    FormSerializer.patterns = patterns;
+
+	    FormSerializer.serializeObject = function serializeObject() {
+	        return new FormSerializer($, this).
+	        addPairs(this.serializeArray()).
+	        serialize();
+	    };
+
+	    FormSerializer.serializeJSON = function serializeJSON() {
+	        return new FormSerializer($, this).
+	        addPairs(this.serializeArray()).
+	        serializeJSON();
+	    };
+
+	    if (typeof $.fn !== "undefined") {
+	        $.fn.serializeObject = FormSerializer.serializeObject;
+	        $.fn.serializeJSON = FormSerializer.serializeJSON;
+	    }
+
+	    exports.FormSerializer = FormSerializer;
+
+	    return FormSerializer;
+	}));
+
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 表单验证
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Validator, View, weui,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	weui = __webpack_require__(47);
+
+	Validator = (function(superClass) {
+	  extend(Validator, superClass);
+
+	  function Validator() {
+	    return Validator.__super__.constructor.apply(this, arguments);
+	  }
+
+	  Validator.prototype.init = function() {
+	    return this.validator = new weui.Validator(this.$el[0]);
+	  };
+
+	  Validator.prototype.run = function() {
+	    return this.render(__webpack_require__(73));
+	  };
+
+	  Validator.prototype.send = function(err, data) {
+	    if (err) {
+	      return this.validator.showError(err);
+	    }
+	    return console.log(data);
+	  };
+
+	  return Validator;
+
+	})(View);
+
+	module.exports = Validator;
+
+	module.exports.viewName = 'validator';
+
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui 表单验证');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <form class="weui_cells weui_cells_form"  mc-validator="send"  novalidate="" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells weui_cells_form';
+	        __mc__attr['validator'] = typeof send === 'undefined' ? 'send' : send;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'validator', __mc__attr['validator']);
+	        __mc__attr['novalidate'] = '';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 3
+
+	            // <div class="weui_cell" />
+	            var __mc__children_3 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_cell';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 4
+
+	                // <div class="weui_cell_hd" />
+	                var __mc__children_4 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell_hd';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 5
+
+	                    // <label for=""  class="weui_label" />
+	                    var __mc__children_5 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['for'] = '';
+	                    __mc__attr['class'] = 'weui_label';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 6
+
+	                        tree.push('卡号');
+	                    })(scope, __mc__children_5); // endTree 6
+	                    var __mc__new_el = new __mc_T_El('label', __mc__attr, __mc__children_5);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_4); // endTree 5
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_4);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <div class="weui_cell_bd weui_cell_primary" />
+	                var __mc__children_7 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 8
+
+	                    // <input class="weui_input"  name="card"  type="number"  validator="required | isNumber"  placeholder="请输入卡号" />
+	                    var __mc__children_8 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_input';
+	                    __mc__attr['name'] = 'card';
+	                    __mc__attr['type'] = 'number';
+	                    __mc__attr['validator'] = 'required | isNumber';
+	                    __mc__attr['placeholder'] = '请输入卡号';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_8);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_7); // endTree 8
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_7);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <div class="weui_cell_ft" />
+	                var __mc__children_9 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell_ft';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 10
+
+	                    // <i class="weui_icon_warn" />
+	                    var __mc__children_10 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_icon_warn';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    var __mc__new_el = new __mc_T_El('i', __mc__attr, __mc__children_10);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_9); // endTree 10
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_9);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            })(scope, __mc__children_3); // endTree 4
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="weui_cell" />
+	            var __mc__children_11 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_cell';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 12
+
+	                // <div class="weui_cell_hd" />
+	                var __mc__children_12 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell_hd';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 13
+
+	                    // <label for=""  class="weui_label" />
+	                    var __mc__children_13 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['for'] = '';
+	                    __mc__attr['class'] = 'weui_label';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 14
+
+	                        tree.push('日期');
+	                    })(scope, __mc__children_13); // endTree 14
+	                    var __mc__new_el = new __mc_T_El('label', __mc__attr, __mc__children_13);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_12); // endTree 13
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_12);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <div class="weui_cell_bd weui_cell_primary" />
+	                var __mc__children_15 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 16
+
+	                    // <input class="weui_input"  type="date"  name="date"  validator="required" />
+	                    var __mc__children_16 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_input';
+	                    __mc__attr['type'] = 'date';
+	                    __mc__attr['name'] = 'date';
+	                    __mc__attr['validator'] = 'required';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_16);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_15); // endTree 16
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_15);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            })(scope, __mc__children_11); // endTree 12
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_11);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="weui_cell" />
+	            var __mc__children_17 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_cell';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 18
+
+	                // <div class="weui_cell_hd" />
+	                var __mc__children_18 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell_hd';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 19
+
+	                    // <label for=""  class="weui_label" />
+	                    var __mc__children_19 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['for'] = '';
+	                    __mc__attr['class'] = 'weui_label';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 20
+
+	                        tree.push('时间');
+	                    })(scope, __mc__children_19); // endTree 20
+	                    var __mc__new_el = new __mc_T_El('label', __mc__attr, __mc__children_19);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_18); // endTree 19
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_18);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <div class="weui_cell_bd weui_cell_primary" />
+	                var __mc__children_21 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 22
+
+	                    // <input class="weui_input"  type="datetime-local"  name="time"  placeholder=""  validator="required" />
+	                    var __mc__children_22 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_input';
+	                    __mc__attr['type'] = 'datetime-local';
+	                    __mc__attr['name'] = 'time';
+	                    __mc__attr['placeholder'] = '';
+	                    __mc__attr['validator'] = 'required';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_22);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_21); // endTree 22
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_21);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            })(scope, __mc__children_17); // endTree 18
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_17);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="weui_btn_area" />
+	            var __mc__children_23 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_btn_area';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 24
+
+	                // <button class="weui_btn weui_btn_primary"  type="submit" />
+	                var __mc__children_24 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_btn weui_btn_primary';
+	                __mc__attr['type'] = 'submit';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 25
+
+	                    tree.push('保存');
+	                })(scope, __mc__children_24); // endTree 25
+	                var __mc__new_el = new __mc_T_El('button', __mc__attr, __mc__children_24);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            })(scope, __mc__children_23); // endTree 24
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_23);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	        })(scope, __mc__children_2); // endTree 3
+	        var __mc__new_el = new __mc_T_El('form', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * # 显示表单验证错误信息
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Component, Validator,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	Component = __webpack_require__(45).Component;
+
+	Validator = (function(superClass) {
+	  extend(Validator, superClass);
+
+	  function Validator() {
+	    return Validator.__super__.constructor.apply(this, arguments);
+	  }
+
+	  Validator.prototype.getTarget = function() {
+	    return this.errData.$el.data('proxyEl') || this.errData.$el;
+	  };
+
+	  Validator.prototype.showError = function(errData) {
+	    var $el, $ft, $parent, $root;
+	    this.errData = errData;
+	    $el = this.getTarget().off('focus.weui_validator').focus();
+	    $parent = $el.parent();
+	    if ($parent.is('.weui_cell_bd')) {
+	      $root = $parent.parent().addClass('weui_cell_warn');
+	      $ft = $root.find('.weui_cell_ft');
+	      if ($ft.length === 0) {
+	        $ft = $('<div class="weui_cell_ft"><i class="weui_icon_warn"></i></div>');
+	        $ft.appendTo($root);
+	      }
+	      $ft.find('.weui_icon_warn').attr('title', this.errData.err);
+	    } else {
+	      $el.addClass('weui_cell_warn');
+	      $el.attr('title', this.errData.err);
+	    }
+	    return $el.on('focus.weui_validator', (function(_this) {
+	      return function() {
+	        return _this.hideError();
+	      };
+	    })(this)).off('change.weui_validator').on('change.weui_validator', (function(_this) {
+	      return function() {
+	        return _this.hideError();
+	      };
+	    })(this));
+	  };
+
+	  Validator.prototype.hideError = function() {
+	    var $el, $parent;
+	    $el = this.getTarget();
+	    $parent = $el.parent();
+	    if ($parent.is('.weui_cell_bd')) {
+	      return $parent.parent().removeClass('weui_cell_warn');
+	    } else {
+	      $el.removeClass('weui_cell_warn');
+	      return $el.attr('title', '');
+	    }
+	  };
+
+	  return Validator;
+
+	})(Component);
+
+	module.exports = Validator;
+
 
 /***/ }
 /******/ ])
