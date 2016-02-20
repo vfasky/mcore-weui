@@ -20,3 +20,4 @@ module.exports =
     CellsSwitch: require './cellsSwitch'
     Validator: require './validator'
     Toast: require './toast'
+    Dialog: require './dialog'

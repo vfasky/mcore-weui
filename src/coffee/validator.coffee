@@ -5,6 +5,7 @@
 'use strict'
 
 {Component} = require 'mcore'
+Dialog = require './dialog'
 
 class Validator extends Component
 
@@ -20,10 +21,10 @@ class Validator extends Component
                 $ft = $ '<div class="weui_cell_ft"><i class="weui_icon_warn"></i></div>'
                 $ft.appendTo $root
 
-            #TODO 点击时，添加弹窗提示
             $ft.find('.weui_icon_warn').attr 'title', @errData.err
                .off('click.weui_validator')
                .on 'click.weui_validator', =>
+                   Dialog.alert @errData.err, null, '错误信息'
                    false
 
         else

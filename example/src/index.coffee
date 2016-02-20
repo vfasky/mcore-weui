@@ -16,6 +16,7 @@ app.route '/button', require './button'
    .route '/cells-switch', require './cellsSwitch'
    .route '/validator', require './validator'
    .route '/toast', require './toast'
+   .route '/dialog', require './dialog'
    .route '*', require './home'
 
 app.run()

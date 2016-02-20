@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	app = new App($('body'));
 
-	app.route('/button', __webpack_require__(60)).route('/cells-radio', __webpack_require__(62)).route('/cells-checkbox', __webpack_require__(64)).route('/cells-switch', __webpack_require__(66)).route('/validator', __webpack_require__(72)).route('/toast', __webpack_require__(77)).route('*', __webpack_require__(68));
+	app.route('/button', __webpack_require__(67)).route('/cells-radio', __webpack_require__(69)).route('/cells-checkbox', __webpack_require__(71)).route('/cells-switch', __webpack_require__(73)).route('/validator', __webpack_require__(75)).route('/toast', __webpack_require__(77)).route('/dialog', __webpack_require__(79)).route('*', __webpack_require__(81));
 
 	app.run();
 
@@ -1466,7 +1466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			        props: propsPatches
 			      });
 			    }
-			    if (!oldNode._component) {
+			    if (!oldNode._component && true !== oldNode._noDiffChild) {
 			      diffChildren(oldNode.children, newNode.children, index, patches, currentPatch);
 			    }
 			  } else {
@@ -1565,6 +1565,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			  var child, currentPatches, i, len;
 			  currentPatches = patches[walker.index];
 			  len = node.childNodes ? node.childNodes.length : 0;
+			  if (node._element) {
+			    if (node._element._noDiffChild || node._element._component) {
+			      len = 0;
+			    }
+			  }
 			  if (node._component) {
 			    len = 0;
 			  }
@@ -1649,10 +1654,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			    if (move.type === 0) {
 			      if (staticNodeList[index] === node.childNodes[index]) {
 			        el = node.childNodes[index];
-			        if (el._element && el._element.destroy) {
-			          el._element.destroy();
+			        if (el) {
+			          if (el._element && el._element.destroy) {
+			            el._element.destroy();
+			          }
+			          node.removeChild(el);
 			        }
-			        node.removeChild(el);
 			      }
 			      staticNodeList.splice(index, 1);
 			    } else if (move.type === 1) {
@@ -1995,7 +2002,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			};
 
 			exports['html'] = function(el, value) {
-			  return el.innerHTML = value != null ? value : '';
+			  el.innerHTML = value != null ? value : '';
+			  return el._element._noDiffChild = true;
 			};
 
 
@@ -3193,15 +3201,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	mcore = __webpack_require__(45);
 
-	__webpack_require__(70)(mcore);
+	__webpack_require__(52)(mcore);
 
 	module.exports = {
-	  Cells: __webpack_require__(52),
-	  CellsRadio: __webpack_require__(54),
-	  CellsCheckbox: __webpack_require__(56),
-	  CellsSwitch: __webpack_require__(58),
-	  Validator: __webpack_require__(74),
-	  Toast: __webpack_require__(75)
+	  Cells: __webpack_require__(54),
+	  CellsRadio: __webpack_require__(56),
+	  CellsCheckbox: __webpack_require__(58),
+	  CellsSwitch: __webpack_require__(60),
+	  Validator: __webpack_require__(62),
+	  Toast: __webpack_require__(65),
+	  Dialog: __webpack_require__(63)
 	};
 
 
@@ -3561,1774 +3570,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	
 	/**
-	 * # 列表
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var Cells, Component, Template, ref, util,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	ref = __webpack_require__(45), Template = ref.Template, Component = ref.Component, util = ref.util;
-
-	Cells = (function(superClass) {
-	  extend(Cells, superClass);
-
-	  function Cells() {
-	    return Cells.__super__.constructor.apply(this, arguments);
-	  }
-
-	  Cells.prototype.init = function() {
-	    return this.render(__webpack_require__(53));
-	  };
-
-	  Cells.prototype.watch = function() {
-	    return this.on('change:list', (function(_this) {
-	      return function(list) {
-	        if (false === util.isArray(list)) {
-	          return;
-	        }
-	        return _this.set('list', list);
-	      };
-	    })(this));
-	  };
-
-	  return Cells;
-
-	})(Component);
-
-	Template.components['cells'] = Cells;
-
-	module.exports = Cells;
-
-
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells weui_cells_access" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells weui_cells_access';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-
-	            // for v in scope.list
-	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
-	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
-	                var v = __mc__arr[__mc__$ix_];
-	                // <a class="weui_cell"  mc-href="v.url ? v.url : 'javascript:;'" />
-	                var __mc__children_2 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['class'] = 'weui_cell';
-	                __mc__attr['href'] = v.url ? v.url : 'javascript:;';
-	                __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'href', __mc__attr['href']);
-	                __mc__attr['key'] = __mc__dom_id++;
-	                (function(scope, tree) { // startTree 3
-
-
-	                    // if v.img
-	                    if (v.img) {
-	                        // <div class="weui_cell_hd" />
-	                        var __mc__children_4 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['class'] = 'weui_cell_hd';
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        (function(scope, tree) { // startTree 5
-
-	                            // <img mc-src="v.img"  alt=""  style="width:20px;margin-right:5px;display:block" />
-	                            var __mc__children_5 = [],
-	                                __mc__attr = {},
-	                                __mc__isBindObserve = false,
-	                                __mc__binderData = [];
-	                            __mc__attr['src'] = v.img;
-	                            __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'src', __mc__attr['src']);
-	                            __mc__attr['alt'] = '';
-	                            __mc__attr['style'] = 'width:20px;margin-right:5px;display:block';
-	                            __mc__attr['key'] = __mc__dom_id++;
-	                            var __mc__new_el = new __mc_T_El('img', __mc__attr, __mc__children_5);
-	                            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                            tree.push(__mc__new_el);
-	                        })(scope, __mc__children_4); // endTree 5
-	                        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_4);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                    } // endif 
-
-	                    // <div class="weui_cell_bd weui_cell_primary" />
-	                    var __mc__children_6 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    (function(scope, tree) { // startTree 7
-
-	                        // <p/>
-	                        var __mc__children_7 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        (function(scope, tree) { // startTree 8
-
-	                            var __mc__rp__key_0;
-	                            __mc__rp__key_0 = v.title;
-	                            tree.push("" + __mc__rp__key_0 + "");
-	                        })(scope, __mc__children_7); // endTree 8
-	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_7);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                    })(scope, __mc__children_6); // endTree 7
-	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-
-	                    // if v.url
-	                    if (v.url) {
-	                        // <div class="weui_cell_ft" />
-	                        var __mc__children_10 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['class'] = 'weui_cell_ft';
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        (function(scope, tree) { // startTree 11
-
-	                            var __mc__rp__key_0;
-	                            __mc__rp__key_0 = (function(x) {
-	                                return x;
-	                            })(v.desc || '');
-	                            tree.push("" + __mc__rp__key_0 + "");
-	                        })(scope, __mc__children_10); // endTree 11
-	                        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_10);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                    } // endif 
-	                })(scope, __mc__children_2); // endTree 3
-	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_2);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	            } // endFor 
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * # 单选列表
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var CellsRadio, Component, Template, ref, util,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	ref = __webpack_require__(45), Template = ref.Template, Component = ref.Component, util = ref.util;
-
-	CellsRadio = (function(superClass) {
-	  extend(CellsRadio, superClass);
-
-	  function CellsRadio() {
-	    return CellsRadio.__super__.constructor.apply(this, arguments);
-	  }
-
-	  CellsRadio.prototype.init = function() {
-	    return this.render(__webpack_require__(55));
-	  };
-
-	  CellsRadio.prototype.watch = function() {
-	    this.on('change:list', (function(_this) {
-	      return function(list) {
-	        if (false === util.isArray(list)) {
-	          return;
-	        }
-	        return _this.set('list', list);
-	      };
-	    })(this));
-	    this.on('change:value', (function(_this) {
-	      return function(value) {
-	        return _this.set('value', value);
-	      };
-	    })(this));
-	    return this.on('change:name', (function(_this) {
-	      return function(name) {
-	        return _this.set('name', name);
-	      };
-	    })(this));
-	  };
-
-	  CellsRadio.prototype.changeValue = function(event, el, value) {
-	    this.set('value', value);
-	    return this.emitEvent('change-value', arguments);
-	  };
-
-	  return CellsRadio;
-
-	})(Component);
-
-	Template.components['cells-radio'] = CellsRadio;
-
-	module.exports = CellsRadio;
-
-
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells weui_cells_radio" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells weui_cells_radio';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-
-	            // for v in scope.list
-	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
-	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
-	                var v = __mc__arr[__mc__$ix_];
-	                // <label class="weui_cell weui_check_label" />
-	                var __mc__children_2 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['class'] = 'weui_cell weui_check_label';
-	                __mc__attr['key'] = __mc__dom_id++;
-	                (function(scope, tree) { // startTree 3
-
-	                    // <div class="weui_cell_bd weui_cell_primary" />
-	                    var __mc__children_3 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    (function(scope, tree) { // startTree 4
-
-	                        // <p/>
-	                        var __mc__children_4 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        (function(scope, tree) { // startTree 5
-
-	                            var __mc__rp__key_0;
-	                            __mc__rp__key_0 = v.title;
-	                            tree.push("" + __mc__rp__key_0 + "");
-	                        })(scope, __mc__children_4); // endTree 5
-	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_4);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                    })(scope, __mc__children_3); // endTree 4
-	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-	                    // <div class="weui_cell_ft" />
-	                    var __mc__children_6 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_ft';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    (function(scope, tree) { // startTree 7
-
-	                        // <input type="radio"  class="weui_check"  mc-name="scope.name || ''"  mc-checked="v.value == scope.value"  mc-on-change="changeValue(v.value)"  mc-value="v.value" />
-	                        var __mc__children_7 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['type'] = 'radio';
-	                        __mc__attr['class'] = 'weui_check';
-	                        __mc__attr['name'] = (function(x) {
-	                            return x;
-	                        })(scope.name || '');
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
-	                        __mc__attr['checked'] = v.value == scope.value;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
-	                        __mc__attr['on-change'] = ['changeValue', v.value];
-	                        __mc__attr['value'] = v.value;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_7);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                        // <span class="weui_icon_checked" />
-	                        var __mc__children_8 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['class'] = 'weui_icon_checked';
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        var __mc__new_el = new __mc_T_El('span', __mc__attr, __mc__children_8);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                    })(scope, __mc__children_6); // endTree 7
-	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-	                })(scope, __mc__children_2); // endTree 3
-	                var __mc__new_el = new __mc_T_El('label', __mc__attr, __mc__children_2);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	            } // endFor 
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 *
-	 * # 复选框
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var CellsCheckbox, Component, Template, ref, util,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty,
-	  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-	ref = __webpack_require__(45), Template = ref.Template, Component = ref.Component, util = ref.util;
-
-	CellsCheckbox = (function(superClass) {
-	  extend(CellsCheckbox, superClass);
-
-	  function CellsCheckbox() {
-	    return CellsCheckbox.__super__.constructor.apply(this, arguments);
-	  }
-
-	  CellsCheckbox.prototype.init = function() {
-	    return this.render(__webpack_require__(57));
-	  };
-
-	  CellsCheckbox.prototype.watch = function() {
-	    this.on('change:list', (function(_this) {
-	      return function(list) {
-	        if (false === util.isArray(list)) {
-	          return;
-	        }
-	        return _this.set('list', list);
-	      };
-	    })(this));
-	    this.on('change:value', (function(_this) {
-	      return function(value) {
-	        if (false === util.isArray(value)) {
-	          return;
-	        }
-	        return _this.set('value', value);
-	      };
-	    })(this));
-	    return this.on('change:name', (function(_this) {
-	      return function(name) {
-	        return _this.set('name', name);
-	      };
-	    })(this));
-	  };
-
-	  CellsCheckbox.prototype.changeValue = function(event, el, val) {
-	    var ix, value;
-	    value = this.get('value');
-	    if (el.checked) {
-	      if ((indexOf.call(value, val) < 0)) {
-	        value.push(val);
-	      }
-	    } else {
-	      ix = value.indexOf(val);
-	      if (ix > -1) {
-	        value.splice(ix, 1);
-	      }
-	    }
-	    this.set('value', value);
-	    return this.emitEvent('change-value', [event, el, value]);
-	  };
-
-	  return CellsCheckbox;
-
-	})(Component);
-
-	Template.components['cells-checkbox'] = CellsCheckbox;
-
-	module.exports = CellsCheckbox;
-
-
-/***/ },
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells weui_cells_checkbox" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells weui_cells_checkbox';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-
-	            // for v in scope.list
-	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
-	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
-	                var v = __mc__arr[__mc__$ix_];
-	                // <label class="weui_cell weui_check_label" />
-	                var __mc__children_2 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['class'] = 'weui_cell weui_check_label';
-	                __mc__attr['key'] = __mc__dom_id++;
-	                (function(scope, tree) { // startTree 3
-
-	                    // <div class="weui_cell_hd" />
-	                    var __mc__children_3 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_hd';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    (function(scope, tree) { // startTree 4
-
-	                        // <input type="checkbox"  class="weui_check"  mc-name="scope.name || ''"  mc-value="v.value"  mc-on-change="changeValue(v.value)"  mc-checked="scope.value.indexOf(v.value) != -1" />
-	                        var __mc__children_4 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['type'] = 'checkbox';
-	                        __mc__attr['class'] = 'weui_check';
-	                        __mc__attr['name'] = (function(x) {
-	                            return x;
-	                        })(scope.name || '');
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
-	                        __mc__attr['value'] = v.value;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
-	                        __mc__attr['on-change'] = ['changeValue', v.value];
-	                        __mc__attr['checked'] = scope.value.indexOf(v.value) != -1;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_4);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                        // <i class="weui_icon_checked" />
-	                        var __mc__children_5 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['class'] = 'weui_icon_checked';
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        var __mc__new_el = new __mc_T_El('i', __mc__attr, __mc__children_5);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                    })(scope, __mc__children_3); // endTree 4
-	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-	                    // <div class="weui_cell_bd weui_cell_primary" />
-	                    var __mc__children_6 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    (function(scope, tree) { // startTree 7
-
-	                        // <p/>
-	                        var __mc__children_7 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        (function(scope, tree) { // startTree 8
-
-	                            var __mc__rp__key_0;
-	                            __mc__rp__key_0 = v.title;
-	                            tree.push("" + __mc__rp__key_0 + "");
-	                        })(scope, __mc__children_7); // endTree 8
-	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_7);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                    })(scope, __mc__children_6); // endTree 7
-	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-	                })(scope, __mc__children_2); // endTree 3
-	                var __mc__new_el = new __mc_T_El('label', __mc__attr, __mc__children_2);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	            } // endFor 
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 58 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * 多选开关
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var CellsCheckbox, CellsSwitch, Template,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	Template = __webpack_require__(45).Template;
-
-	CellsCheckbox = __webpack_require__(56);
-
-	CellsSwitch = (function(superClass) {
-	  extend(CellsSwitch, superClass);
-
-	  function CellsSwitch() {
-	    return CellsSwitch.__super__.constructor.apply(this, arguments);
-	  }
-
-	  CellsSwitch.prototype.init = function() {
-	    return this.render(__webpack_require__(59));
-	  };
-
-	  return CellsSwitch;
-
-	})(CellsCheckbox);
-
-	Template.components['cells-switch'] = CellsSwitch;
-
-	module.exports = CellsSwitch;
-
-
-/***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells weui_cells_form" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells weui_cells_form';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-
-	            // for v in scope.list
-	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
-	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
-	                var v = __mc__arr[__mc__$ix_];
-	                // <div class="weui_cell weui_cell_switch" />
-	                var __mc__children_2 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['class'] = 'weui_cell weui_cell_switch';
-	                __mc__attr['key'] = __mc__dom_id++;
-	                (function(scope, tree) { // startTree 3
-
-	                    // <div class="weui_cell_hd weui_cell_primary" />
-	                    var __mc__children_3 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_hd weui_cell_primary';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    (function(scope, tree) { // startTree 4
-
-	                        var __mc__rp__key_0;
-	                        __mc__rp__key_0 = v.title;
-	                        tree.push("" + __mc__rp__key_0 + "");
-	                    })(scope, __mc__children_3); // endTree 4
-	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-	                    // <div class="weui_cell_ft" />
-	                    var __mc__children_5 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_cell_ft';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    (function(scope, tree) { // startTree 6
-
-	                        // <input class="weui_switch"  mc-name="scope.name || ''"  mc-value="v.value"  mc-on-change="changeValue(v.value)"  mc-checked="scope.value.indexOf(v.value) != -1"  type="checkbox" />
-	                        var __mc__children_6 = [],
-	                            __mc__attr = {},
-	                            __mc__isBindObserve = false,
-	                            __mc__binderData = [];
-	                        __mc__attr['class'] = 'weui_switch';
-	                        __mc__attr['name'] = (function(x) {
-	                            return x;
-	                        })(scope.name || '');
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
-	                        __mc__attr['value'] = v.value;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
-	                        __mc__attr['on-change'] = ['changeValue', v.value];
-	                        __mc__attr['checked'] = scope.value.indexOf(v.value) != -1;
-	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
-	                        __mc__attr['type'] = 'checkbox';
-	                        __mc__attr['key'] = __mc__dom_id++;
-	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_6);
-	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                        tree.push(__mc__new_el);
-	                    })(scope, __mc__children_5); // endTree 6
-	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_5);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-	                })(scope, __mc__children_2); // endTree 3
-	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	            } // endFor 
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 60 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * 按钮
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var Button, View,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	View = __webpack_require__(45).View;
-
-	Button = (function(superClass) {
-	  extend(Button, superClass);
-
-	  function Button() {
-	    return Button.__super__.constructor.apply(this, arguments);
-	  }
-
-	  Button.prototype.run = function() {
-	    return this.render(__webpack_require__(61));
-	  };
-
-	  return Button;
-
-	})(View);
-
-	module.exports = Button;
-
-	module.exports.viewName = 'button';
-
-
-/***/ },
-/* 61 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells_title" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells_title';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-	            tree.push('weui 按钮');
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <div class="weui_cells" />
-	        var __mc__children_2 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 3
-
-	            // <a href="javascript:;"  class="weui_btn weui_btn_primary" />
-	            var __mc__children_3 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_primary';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 4
-
-	                tree.push('按钮');
-	            })(scope, __mc__children_3); // endTree 4
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_3);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_primary" />
-	            var __mc__children_5 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_primary';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 6
-
-	                tree.push('按钮');
-	            })(scope, __mc__children_5); // endTree 6
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_5);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	            // <a href="javascript:;"  class="weui_btn weui_btn_warn" />
-	            var __mc__children_7 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_warn';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 8
-
-	                tree.push('确认');
-	            })(scope, __mc__children_7); // endTree 8
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_7);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_warn" />
-	            var __mc__children_9 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_warn';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 10
-
-	                tree.push('确认');
-	            })(scope, __mc__children_9); // endTree 10
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_9);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	            // <a href="javascript:;"  class="weui_btn weui_btn_default" />
-	            var __mc__children_11 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_default';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 12
-
-	                tree.push('按钮');
-	            })(scope, __mc__children_11); // endTree 12
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_11);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_default" />
-	            var __mc__children_13 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['href'] = 'javascript:;';
-	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_default';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 14
-
-	                tree.push('按钮');
-	            })(scope, __mc__children_13); // endTree 14
-	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_13);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	            // <div class="button_sp_area" />
-	            var __mc__children_15 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['class'] = 'button_sp_area';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 16
-
-	                // <a href="javascript:;"  class="weui_btn weui_btn_plain_default" />
-	                var __mc__children_16 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['href'] = 'javascript:;';
-	                __mc__attr['class'] = 'weui_btn weui_btn_plain_default';
-	                __mc__attr['key'] = __mc__dom_id++;
-	                (function(scope, tree) { // startTree 17
-
-	                    tree.push('按钮');
-	                })(scope, __mc__children_16); // endTree 17
-	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_16);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	                // <a href="javascript:;"  class="weui_btn weui_btn_plain_primary" />
-	                var __mc__children_18 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['href'] = 'javascript:;';
-	                __mc__attr['class'] = 'weui_btn weui_btn_plain_primary';
-	                __mc__attr['key'] = __mc__dom_id++;
-	                (function(scope, tree) { // startTree 19
-
-	                    tree.push('按钮');
-	                })(scope, __mc__children_18); // endTree 19
-	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_18);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	                // <a href="javascript:;"  class="weui_btn weui_btn_mini weui_btn_primary" />
-	                var __mc__children_20 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['href'] = 'javascript:;';
-	                __mc__attr['class'] = 'weui_btn weui_btn_mini weui_btn_primary';
-	                __mc__attr['key'] = __mc__dom_id++;
-	                (function(scope, tree) { // startTree 21
-
-	                    tree.push('按钮');
-	                })(scope, __mc__children_20); // endTree 21
-	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_20);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	                // <a href="javascript:;"  class="weui_btn weui_btn_mini weui_btn_default" />
-	                var __mc__children_22 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['href'] = 'javascript:;';
-	                __mc__attr['class'] = 'weui_btn weui_btn_mini weui_btn_default';
-	                __mc__attr['key'] = __mc__dom_id++;
-	                (function(scope, tree) { // startTree 23
-
-	                    tree.push('按钮');
-	                })(scope, __mc__children_22); // endTree 23
-	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_22);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	            })(scope, __mc__children_15); // endTree 16
-	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_15);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	        })(scope, __mc__children_2); // endTree 3
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * 单选列表
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var CellsRadio, View,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	View = __webpack_require__(45).View;
-
-	CellsRadio = (function(superClass) {
-	  extend(CellsRadio, superClass);
-
-	  function CellsRadio() {
-	    return CellsRadio.__super__.constructor.apply(this, arguments);
-	  }
-
-	  CellsRadio.prototype.run = function() {
-	    return this.render(__webpack_require__(63), {
-	      list: [
-	        {
-	          title: 'test 0',
-	          value: 0
-	        }, {
-	          title: 'test 1',
-	          value: 1
-	        }
-	      ]
-	    });
-	  };
-
-	  CellsRadio.prototype.changeValue = function(event, el, value) {
-	    return console.log(value);
-	  };
-
-	  return CellsRadio;
-
-	})(View);
-
-	module.exports = CellsRadio;
-
-	module.exports.viewName = 'cellsRadio';
-
-
-/***/ },
-/* 63 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells_title" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells_title';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-	            tree.push('weui 单选列表');
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <cells-radio name="test"  value="1"  mc-on-change-value="changeValue"  mc-list="scope.list" />
-	        var __mc__children_2 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['name'] = 'test';
-	        __mc__attr['value'] = '1';
-	        __mc__attr['on-change-value'] = 'changeValue';
-	        __mc__attr['list'] = scope.list;
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
-	        __mc__attr['key'] = __mc__dom_id++;
-	        var __mc__new_el = new __mc_T_El('cells-radio', __mc__attr, __mc__children_2);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 64 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * 复选列表
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var CellsCheckbox, View,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	View = __webpack_require__(45).View;
-
-	CellsCheckbox = (function(superClass) {
-	  extend(CellsCheckbox, superClass);
-
-	  function CellsCheckbox() {
-	    return CellsCheckbox.__super__.constructor.apply(this, arguments);
-	  }
-
-	  CellsCheckbox.prototype.run = function() {
-	    return this.render(__webpack_require__(65), {
-	      list: [
-	        {
-	          title: 'test 0',
-	          value: 0
-	        }, {
-	          title: 'test 1',
-	          value: 1
-	        }, {
-	          title: 'test 2',
-	          value: 2
-	        }
-	      ],
-	      value: [1, 2]
-	    });
-	  };
-
-	  CellsCheckbox.prototype.changeValue = function(event, el, value) {
-	    return console.log(value);
-	  };
-
-	  return CellsCheckbox;
-
-	})(View);
-
-	module.exports = CellsCheckbox;
-
-	module.exports.viewName = 'cellsCheckbox';
-
-
-/***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells_title" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells_title';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-	            tree.push('weui 复选列表');
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <cells-checkbox name="test"  mc-value="scope.value"  mc-on-change-value="changeValue"  mc-list="scope.list" />
-	        var __mc__children_2 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['name'] = 'test';
-	        __mc__attr['value'] = scope.value;
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
-	        __mc__attr['on-change-value'] = 'changeValue';
-	        __mc__attr['list'] = scope.list;
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
-	        __mc__attr['key'] = __mc__dom_id++;
-	        var __mc__new_el = new __mc_T_El('cells-checkbox', __mc__attr, __mc__children_2);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * 复选列表
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var CellsSwitch, View,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	View = __webpack_require__(45).View;
-
-	CellsSwitch = (function(superClass) {
-	  extend(CellsSwitch, superClass);
-
-	  function CellsSwitch() {
-	    return CellsSwitch.__super__.constructor.apply(this, arguments);
-	  }
-
-	  CellsSwitch.prototype.run = function() {
-	    return this.render(__webpack_require__(67), {
-	      list: [
-	        {
-	          title: 'test 0',
-	          value: 0
-	        }, {
-	          title: 'test 1',
-	          value: 1
-	        }, {
-	          title: 'test 2',
-	          value: 2
-	        }
-	      ],
-	      value: [1, 2]
-	    });
-	  };
-
-	  CellsSwitch.prototype.changeValue = function(event, el, value) {
-	    return console.log(value);
-	  };
-
-	  return CellsSwitch;
-
-	})(View);
-
-	module.exports = CellsSwitch;
-
-	module.exports.viewName = 'cellsSwitch';
-
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells_title" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells_title';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-	            tree.push('weui 多选开关');
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <cells-switch name="test"  mc-value="scope.value"  mc-on-change-value="changeValue"  mc-list="scope.list" />
-	        var __mc__children_2 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['name'] = 'test';
-	        __mc__attr['value'] = scope.value;
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
-	        __mc__attr['on-change-value'] = 'changeValue';
-	        __mc__attr['list'] = scope.list;
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
-	        __mc__attr['key'] = __mc__dom_id++;
-	        var __mc__new_el = new __mc_T_El('cells-switch', __mc__attr, __mc__children_2);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * 首页
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var Home, View,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	View = __webpack_require__(45).View;
-
-	Home = (function(superClass) {
-	  extend(Home, superClass);
-
-	  function Home() {
-	    return Home.__super__.constructor.apply(this, arguments);
-	  }
-
-	  Home.prototype.run = function() {
-	    return this.render(__webpack_require__(69), {
-	      list: [
-	        {
-	          url: '#/button',
-	          title: '按钮',
-	          desc: '直接调用，没有封装'
-	        }, {
-	          url: '#/cells-radio',
-	          title: '单选列表'
-	        }, {
-	          url: '#/cells-checkbox',
-	          title: '复选列表'
-	        }, {
-	          url: '#/cells-switch',
-	          title: '多选开关'
-	        }, {
-	          url: '#/validator',
-	          title: '表单验证'
-	        }, {
-	          url: '#/toast',
-	          title: 'Toast',
-	          desc: '成功提示，及loading'
-	        }
-	      ]
-	    });
-	  };
-
-	  return Home;
-
-	})(View);
-
-	module.exports = Home;
-
-	module.exports.viewName = 'home';
-
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div class="weui_cells_title" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['class'] = 'weui_cells_title';
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-	            tree.push('weui 组件列表');
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	        // <cells mc-list="scope.list" />
-	        var __mc__children_2 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['list'] = scope.list;
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
-	        __mc__attr['key'] = __mc__dom_id++;
-	        var __mc__new_el = new __mc_T_El('cells', __mc__attr, __mc__children_2);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
 	 * 表单验证
 	 * @date 2016-02-14 16:01:56
 	 * @author vfasky <vfasky@gmail.com>
@@ -5340,7 +3581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	$ = __webpack_require__(46);
 
-	__webpack_require__(71);
+	__webpack_require__(53);
 
 	_isAlphabetReg = /^[A-Za-z]+$/;
 
@@ -5621,7 +3862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 71 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -5774,7 +4015,2248 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
+/* 54 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * # 列表
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Cells, Component, Template, ref, util,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	ref = __webpack_require__(45), Template = ref.Template, Component = ref.Component, util = ref.util;
+
+	Cells = (function(superClass) {
+	  extend(Cells, superClass);
+
+	  function Cells() {
+	    return Cells.__super__.constructor.apply(this, arguments);
+	  }
+
+	  Cells.prototype.init = function() {
+	    return this.render(__webpack_require__(55));
+	  };
+
+	  Cells.prototype.watch = function() {
+	    return this.on('change:list', (function(_this) {
+	      return function(list) {
+	        if (false === util.isArray(list)) {
+	          return;
+	        }
+	        return _this.set('list', list);
+	      };
+	    })(this));
+	  };
+
+	  return Cells;
+
+	})(Component);
+
+	Template.components['cells'] = Cells;
+
+	module.exports = Cells;
+
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells weui_cells_access" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells weui_cells_access';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+
+	            // for v in scope.list
+	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
+	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
+	                var v = __mc__arr[__mc__$ix_];
+	                // <a class="weui_cell"  mc-href="v.url ? v.url : 'javascript:;'" />
+	                var __mc__children_2 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell';
+	                __mc__attr['href'] = v.url ? v.url : 'javascript:;';
+	                __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'href', __mc__attr['href']);
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 3
+
+
+	                    // if v.img
+	                    if (v.img) {
+	                        // <div class="weui_cell_hd" />
+	                        var __mc__children_4 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['class'] = 'weui_cell_hd';
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        (function(scope, tree) { // startTree 5
+
+	                            // <img mc-src="v.img"  alt=""  style="width:20px;margin-right:5px;display:block" />
+	                            var __mc__children_5 = [],
+	                                __mc__attr = {},
+	                                __mc__isBindObserve = false,
+	                                __mc__binderData = [];
+	                            __mc__attr['src'] = v.img;
+	                            __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'src', __mc__attr['src']);
+	                            __mc__attr['alt'] = '';
+	                            __mc__attr['style'] = 'width:20px;margin-right:5px;display:block';
+	                            __mc__attr['key'] = __mc__dom_id++;
+	                            var __mc__new_el = new __mc_T_El('img', __mc__attr, __mc__children_5);
+	                            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                            tree.push(__mc__new_el);
+	                        })(scope, __mc__children_4); // endTree 5
+	                        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_4);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    } // endif 
+
+	                    // <div class="weui_cell_bd weui_cell_primary" />
+	                    var __mc__children_6 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 7
+
+	                        // <p/>
+	                        var __mc__children_7 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        (function(scope, tree) { // startTree 8
+
+	                            var __mc__rp__key_0;
+	                            __mc__rp__key_0 = v.title;
+	                            tree.push("" + __mc__rp__key_0 + "");
+	                        })(scope, __mc__children_7); // endTree 8
+	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_7);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    })(scope, __mc__children_6); // endTree 7
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+
+	                    // if v.url
+	                    if (v.url) {
+	                        // <div class="weui_cell_ft" />
+	                        var __mc__children_10 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['class'] = 'weui_cell_ft';
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        (function(scope, tree) { // startTree 11
+
+	                            var __mc__rp__key_0;
+	                            __mc__rp__key_0 = (function(x) {
+	                                return x;
+	                            })(v.desc || '');
+	                            tree.push("" + __mc__rp__key_0 + "");
+	                        })(scope, __mc__children_10); // endTree 11
+	                        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_10);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    } // endif 
+	                })(scope, __mc__children_2); // endTree 3
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_2);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            } // endFor 
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * # 单选列表
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var CellsRadio, Component, Template, ref, util,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	ref = __webpack_require__(45), Template = ref.Template, Component = ref.Component, util = ref.util;
+
+	CellsRadio = (function(superClass) {
+	  extend(CellsRadio, superClass);
+
+	  function CellsRadio() {
+	    return CellsRadio.__super__.constructor.apply(this, arguments);
+	  }
+
+	  CellsRadio.prototype.init = function() {
+	    return this.render(__webpack_require__(57));
+	  };
+
+	  CellsRadio.prototype.watch = function() {
+	    this.on('change:list', (function(_this) {
+	      return function(list) {
+	        if (false === util.isArray(list)) {
+	          return;
+	        }
+	        return _this.set('list', list);
+	      };
+	    })(this));
+	    this.on('change:value', (function(_this) {
+	      return function(value) {
+	        return _this.set('value', value);
+	      };
+	    })(this));
+	    return this.on('change:name', (function(_this) {
+	      return function(name) {
+	        return _this.set('name', name);
+	      };
+	    })(this));
+	  };
+
+	  CellsRadio.prototype.changeValue = function(event, el, value) {
+	    this.set('value', value);
+	    return this.emitEvent('change-value', arguments);
+	  };
+
+	  return CellsRadio;
+
+	})(Component);
+
+	Template.components['cells-radio'] = CellsRadio;
+
+	module.exports = CellsRadio;
+
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells weui_cells_radio" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells weui_cells_radio';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+
+	            // for v in scope.list
+	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
+	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
+	                var v = __mc__arr[__mc__$ix_];
+	                // <label class="weui_cell weui_check_label" />
+	                var __mc__children_2 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell weui_check_label';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 3
+
+	                    // <div class="weui_cell_bd weui_cell_primary" />
+	                    var __mc__children_3 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 4
+
+	                        // <p/>
+	                        var __mc__children_4 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        (function(scope, tree) { // startTree 5
+
+	                            var __mc__rp__key_0;
+	                            __mc__rp__key_0 = v.title;
+	                            tree.push("" + __mc__rp__key_0 + "");
+	                        })(scope, __mc__children_4); // endTree 5
+	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_4);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    })(scope, __mc__children_3); // endTree 4
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                    // <div class="weui_cell_ft" />
+	                    var __mc__children_6 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_ft';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 7
+
+	                        // <input type="radio"  class="weui_check"  mc-name="scope.name || ''"  mc-checked="v.value == scope.value"  mc-on-change="changeValue(v.value)"  mc-value="v.value" />
+	                        var __mc__children_7 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['type'] = 'radio';
+	                        __mc__attr['class'] = 'weui_check';
+	                        __mc__attr['name'] = (function(x) {
+	                            return x;
+	                        })(scope.name || '');
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
+	                        __mc__attr['checked'] = v.value == scope.value;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
+	                        __mc__attr['on-change'] = ['changeValue', v.value];
+	                        __mc__attr['value'] = v.value;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_7);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                        // <span class="weui_icon_checked" />
+	                        var __mc__children_8 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['class'] = 'weui_icon_checked';
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        var __mc__new_el = new __mc_T_El('span', __mc__attr, __mc__children_8);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    })(scope, __mc__children_6); // endTree 7
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_2); // endTree 3
+	                var __mc__new_el = new __mc_T_El('label', __mc__attr, __mc__children_2);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            } // endFor 
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 *
+	 * # 复选框
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var CellsCheckbox, Component, Template, ref, util,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty,
+	  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+	ref = __webpack_require__(45), Template = ref.Template, Component = ref.Component, util = ref.util;
+
+	CellsCheckbox = (function(superClass) {
+	  extend(CellsCheckbox, superClass);
+
+	  function CellsCheckbox() {
+	    return CellsCheckbox.__super__.constructor.apply(this, arguments);
+	  }
+
+	  CellsCheckbox.prototype.init = function() {
+	    return this.render(__webpack_require__(59));
+	  };
+
+	  CellsCheckbox.prototype.watch = function() {
+	    this.on('change:list', (function(_this) {
+	      return function(list) {
+	        if (false === util.isArray(list)) {
+	          return;
+	        }
+	        return _this.set('list', list);
+	      };
+	    })(this));
+	    this.on('change:value', (function(_this) {
+	      return function(value) {
+	        if (false === util.isArray(value)) {
+	          return;
+	        }
+	        return _this.set('value', value);
+	      };
+	    })(this));
+	    return this.on('change:name', (function(_this) {
+	      return function(name) {
+	        return _this.set('name', name);
+	      };
+	    })(this));
+	  };
+
+	  CellsCheckbox.prototype.changeValue = function(event, el, val) {
+	    var ix, value;
+	    value = this.get('value');
+	    if (el.checked) {
+	      if ((indexOf.call(value, val) < 0)) {
+	        value.push(val);
+	      }
+	    } else {
+	      ix = value.indexOf(val);
+	      if (ix > -1) {
+	        value.splice(ix, 1);
+	      }
+	    }
+	    this.set('value', value);
+	    return this.emitEvent('change-value', [event, el, value]);
+	  };
+
+	  return CellsCheckbox;
+
+	})(Component);
+
+	Template.components['cells-checkbox'] = CellsCheckbox;
+
+	module.exports = CellsCheckbox;
+
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells weui_cells_checkbox" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells weui_cells_checkbox';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+
+	            // for v in scope.list
+	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
+	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
+	                var v = __mc__arr[__mc__$ix_];
+	                // <label class="weui_cell weui_check_label" />
+	                var __mc__children_2 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell weui_check_label';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 3
+
+	                    // <div class="weui_cell_hd" />
+	                    var __mc__children_3 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_hd';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 4
+
+	                        // <input type="checkbox"  class="weui_check"  mc-name="scope.name || ''"  mc-value="v.value"  mc-on-change="changeValue(v.value)"  mc-checked="scope.value.indexOf(v.value) != -1" />
+	                        var __mc__children_4 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['type'] = 'checkbox';
+	                        __mc__attr['class'] = 'weui_check';
+	                        __mc__attr['name'] = (function(x) {
+	                            return x;
+	                        })(scope.name || '');
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
+	                        __mc__attr['value'] = v.value;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
+	                        __mc__attr['on-change'] = ['changeValue', v.value];
+	                        __mc__attr['checked'] = scope.value.indexOf(v.value) != -1;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_4);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                        // <i class="weui_icon_checked" />
+	                        var __mc__children_5 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['class'] = 'weui_icon_checked';
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        var __mc__new_el = new __mc_T_El('i', __mc__attr, __mc__children_5);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    })(scope, __mc__children_3); // endTree 4
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                    // <div class="weui_cell_bd weui_cell_primary" />
+	                    var __mc__children_6 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_bd weui_cell_primary';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 7
+
+	                        // <p/>
+	                        var __mc__children_7 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        (function(scope, tree) { // startTree 8
+
+	                            var __mc__rp__key_0;
+	                            __mc__rp__key_0 = v.title;
+	                            tree.push("" + __mc__rp__key_0 + "");
+	                        })(scope, __mc__children_7); // endTree 8
+	                        var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_7);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    })(scope, __mc__children_6); // endTree 7
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_2); // endTree 3
+	                var __mc__new_el = new __mc_T_El('label', __mc__attr, __mc__children_2);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            } // endFor 
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 多选开关
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var CellsCheckbox, CellsSwitch, Template,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	Template = __webpack_require__(45).Template;
+
+	CellsCheckbox = __webpack_require__(58);
+
+	CellsSwitch = (function(superClass) {
+	  extend(CellsSwitch, superClass);
+
+	  function CellsSwitch() {
+	    return CellsSwitch.__super__.constructor.apply(this, arguments);
+	  }
+
+	  CellsSwitch.prototype.init = function() {
+	    return this.render(__webpack_require__(61));
+	  };
+
+	  return CellsSwitch;
+
+	})(CellsCheckbox);
+
+	Template.components['cells-switch'] = CellsSwitch;
+
+	module.exports = CellsSwitch;
+
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells weui_cells_form" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells weui_cells_form';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+
+	            // for v in scope.list
+	            var __mc__arr = __isArray(scope.list) ? scope.list : [];
+	            for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
+	                var v = __mc__arr[__mc__$ix_];
+	                // <div class="weui_cell weui_cell_switch" />
+	                var __mc__children_2 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_cell weui_cell_switch';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 3
+
+	                    // <div class="weui_cell_hd weui_cell_primary" />
+	                    var __mc__children_3 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_hd weui_cell_primary';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 4
+
+	                        var __mc__rp__key_0;
+	                        __mc__rp__key_0 = v.title;
+	                        tree.push("" + __mc__rp__key_0 + "");
+	                    })(scope, __mc__children_3); // endTree 4
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                    // <div class="weui_cell_ft" />
+	                    var __mc__children_5 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_cell_ft';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 6
+
+	                        // <input class="weui_switch"  mc-name="scope.name || ''"  mc-value="v.value"  mc-on-change="changeValue(v.value)"  mc-checked="scope.value.indexOf(v.value) != -1"  type="checkbox" />
+	                        var __mc__children_6 = [],
+	                            __mc__attr = {},
+	                            __mc__isBindObserve = false,
+	                            __mc__binderData = [];
+	                        __mc__attr['class'] = 'weui_switch';
+	                        __mc__attr['name'] = (function(x) {
+	                            return x;
+	                        })(scope.name || '');
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'name', __mc__attr['name']);
+	                        __mc__attr['value'] = v.value;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
+	                        __mc__attr['on-change'] = ['changeValue', v.value];
+	                        __mc__attr['checked'] = scope.value.indexOf(v.value) != -1;
+	                        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'checked', __mc__attr['checked']);
+	                        __mc__attr['type'] = 'checkbox';
+	                        __mc__attr['key'] = __mc__dom_id++;
+	                        var __mc__new_el = new __mc_T_El('input', __mc__attr, __mc__children_6);
+	                        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                        tree.push(__mc__new_el);
+	                    })(scope, __mc__children_5); // endTree 6
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_5);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_2); // endTree 3
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            } // endFor 
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * # 显示表单验证错误信息
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Component, Dialog, Validator,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	Component = __webpack_require__(45).Component;
+
+	Dialog = __webpack_require__(63);
+
+	Validator = (function(superClass) {
+	  extend(Validator, superClass);
+
+	  function Validator() {
+	    return Validator.__super__.constructor.apply(this, arguments);
+	  }
+
+	  Validator.prototype.getTarget = function() {
+	    return this.errData.$el.data('proxyEl') || this.errData.$el;
+	  };
+
+	  Validator.prototype.showError = function(errData) {
+	    var $el, $ft, $parent, $root;
+	    this.errData = errData;
+	    $el = this.getTarget().off('focus.weui_validator').focus();
+	    $parent = $el.parent();
+	    if ($parent.is('.weui_cell_bd')) {
+	      $root = $parent.parent().addClass('weui_cell_warn');
+	      $ft = $root.find('.weui_cell_ft');
+	      if ($ft.length === 0) {
+	        $ft = $('<div class="weui_cell_ft"><i class="weui_icon_warn"></i></div>');
+	        $ft.appendTo($root);
+	      }
+	      $ft.find('.weui_icon_warn').attr('title', this.errData.err).off('click.weui_validator').on('click.weui_validator', (function(_this) {
+	        return function() {
+	          Dialog.alert(_this.errData.err, null, '错误信息');
+	          return false;
+	        };
+	      })(this));
+	    } else {
+	      $el.addClass('weui_cell_warn');
+	      $el.attr('title', this.errData.err);
+	    }
+	    return $el.on('focus.weui_validator', (function(_this) {
+	      return function() {
+	        return _this.hideError();
+	      };
+	    })(this)).off('change.weui_validator').on('change.weui_validator', (function(_this) {
+	      return function() {
+	        return _this.hideError();
+	      };
+	    })(this));
+	  };
+
+	  Validator.prototype.hideError = function() {
+	    var $el, $parent;
+	    $el = this.getTarget();
+	    $parent = $el.parent();
+	    if ($parent.is('.weui_cell_bd')) {
+	      return $parent.parent().removeClass('weui_cell_warn');
+	    } else {
+	      $el.removeClass('weui_cell_warn');
+	      return $el.attr('title', '');
+	    }
+	  };
+
+	  return Validator;
+
+	})(Component);
+
+	module.exports = Validator;
+
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 *
+	 * Dialog
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Component, Dialog, _dialog,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	Component = __webpack_require__(45).Component;
+
+	_dialog = null;
+
+	Dialog = (function(superClass) {
+	  extend(Dialog, superClass);
+
+	  function Dialog(el1, virtualEl) {
+	    this.el = el1 != null ? el1 : document.body;
+	    this.virtualEl = virtualEl != null ? virtualEl : null;
+	    Dialog.__super__.constructor.call(this, this.el, this.virtualEl);
+	  }
+
+	  Dialog.prototype.init = function() {
+	    return this.render(__webpack_require__(64), {
+	      type: 'alert',
+	      show: false
+	    });
+	  };
+
+	  Dialog.prototype.show = function(content, callback1, title, type) {
+	    this.callback = callback1;
+	    if (title == null) {
+	      title = '提示信息';
+	    }
+	    if (type == null) {
+	      type = 'alert';
+	    }
+	    this.set('title', title);
+	    this.set('type', type);
+	    this.set('content', content);
+	    this.set('show', true);
+	    return this;
+	  };
+
+	  Dialog.prototype.isShow = function() {
+	    return this.get('show');
+	  };
+
+	  Dialog.prototype.close = function(event, el, isOk) {
+	    isOk = isOk === true && true || false;
+	    return this.set('show', false, (function(_this) {
+	      return function() {
+	        return _this.callback(isOk);
+	      };
+	    })(this));
+	  };
+
+	  return Dialog;
+
+	})(Component);
+
+	Dialog.alert = function(content, callback, title) {
+	  if (!_dialog) {
+	    _dialog = new Dialog();
+	  }
+	  callback || (callback = function() {});
+	  if (_dialog.isShow()) {
+	    return false;
+	  }
+	  return _dialog.show(content, callback, title);
+	};
+
+	Dialog.confirm = function(content, callback, title) {
+	  if (title == null) {
+	    title = '请确认';
+	  }
+	  if (!_dialog) {
+	    _dialog = new Dialog();
+	  }
+	  callback || (callback = function() {});
+	  if (_dialog.isShow()) {
+	    return false;
+	  }
+	  return _dialog.show(content, callback, title, 'confirm');
+	};
+
+	module.exports = Dialog;
+
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div mc-show="scope.show"  mc-class="scope.type == 'alert' ? 'weui_dialog_alert' : 'weui_dialog_confirm'" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['show'] = scope.show;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'show', __mc__attr['show']);
+	        __mc__attr['class'] = scope.type == 'alert' ? 'weui_dialog_alert' : 'weui_dialog_confirm';
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'class', __mc__attr['class']);
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            // <div class="weui_mask" />
+	            var __mc__children_1 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_mask';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_1);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="weui_dialog" />
+	            var __mc__children_2 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_dialog';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 3
+
+	                // <div class="weui_dialog_hd" />
+	                var __mc__children_3 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_dialog_hd';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 4
+
+	                    // <strong class="weui_dialog_title" />
+	                    var __mc__children_4 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_dialog_title';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 5
+
+	                        var __mc__rp__key_0;
+	                        __mc__rp__key_0 = scope.title;
+	                        tree.push("" + __mc__rp__key_0 + "");
+	                    })(scope, __mc__children_4); // endTree 5
+	                    var __mc__new_el = new __mc_T_El('strong', __mc__attr, __mc__children_4);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_3); // endTree 4
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <div class="weui_dialog_bd"  mc-html="scope.content" />
+	                var __mc__children_6 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_dialog_bd';
+	                __mc__attr['html'] = scope.content;
+	                __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'html', __mc__attr['html']);
+	                __mc__attr['key'] = __mc__dom_id++;
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <div class="weui_dialog_ft" />
+	                var __mc__children_7 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_dialog_ft';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 8
+
+	                    // <a mc-show="scope.type == 'confirm'"  mc-on-click="close(false)"  href="javascript:;"  class="weui_btn_dialog default" />
+	                    var __mc__children_8 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['show'] = scope.type == 'confirm';
+	                    __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'show', __mc__attr['show']);
+	                    __mc__attr['on-click'] = ['close', false];
+	                    __mc__attr['href'] = 'javascript:;';
+	                    __mc__attr['class'] = 'weui_btn_dialog default';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 9
+
+	                        tree.push('取消');
+	                    })(scope, __mc__children_8); // endTree 9
+	                    var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_8);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                    // <a href="javascript:;"  class="weui_btn_dialog primary"  mc-on-click="close(true)" />
+	                    var __mc__children_10 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['href'] = 'javascript:;';
+	                    __mc__attr['class'] = 'weui_btn_dialog primary';
+	                    __mc__attr['on-click'] = ['close', true];
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 11
+
+	                        tree.push('确定');
+	                    })(scope, __mc__children_10); // endTree 11
+	                    var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_10);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                })(scope, __mc__children_7); // endTree 8
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_7);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            })(scope, __mc__children_2); // endTree 3
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Toast
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Component, Toast, _loadingArr, _toast,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	Component = __webpack_require__(45).Component;
+
+	_toast = null;
+
+	_loadingArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+	Toast = (function(superClass) {
+	  extend(Toast, superClass);
+
+	  function Toast(el, virtualEl) {
+	    this.el = el != null ? el : document.body;
+	    this.virtualEl = virtualEl != null ? virtualEl : null;
+	    Toast.__super__.constructor.call(this, this.el, this.virtualEl);
+	  }
+
+	  Toast.prototype.init = function() {
+	    return this.render(__webpack_require__(66), {
+	      show: false,
+	      msg: '',
+	      loadingArr: _loadingArr
+	    });
+	  };
+
+	  Toast.prototype.show = function(msg, type) {
+	    if (type == null) {
+	      type = 'toast';
+	    }
+	    this.set('msg', msg);
+	    this.set('type', type);
+	    return this.set('show', true);
+	  };
+
+	  Toast.prototype.hide = function() {
+	    return this.set('show', false);
+	  };
+
+	  return Toast;
+
+	})(Component);
+
+	Toast.loading = {
+	  show: function(msg) {
+	    if (msg == null) {
+	      msg = '数据加载中';
+	    }
+	    if (!_toast) {
+	      _toast = new Toast();
+	    }
+	    return _toast.show(msg, 'loading');
+	  },
+	  hide: function() {
+	    if (_toast) {
+	      return _toast.hide();
+	    }
+	  }
+	};
+
+	Toast.success = {
+	  show: function(msg) {
+	    if (!_toast) {
+	      _toast = new Toast();
+	    }
+	    return _toast.show(msg);
+	  },
+	  hide: function() {
+	    if (_toast) {
+	      return _toast.hide();
+	    }
+	  }
+	};
+
+	module.exports = Toast;
+
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div mc-show="scope.show"  mc-class="scope.type == 'loading' ? 'weui_loading_toast': ''" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['show'] = scope.show;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'show', __mc__attr['show']);
+	        __mc__attr['class'] = scope.type == 'loading' ? 'weui_loading_toast' : '';
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'class', __mc__attr['class']);
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            // <div class="weui_mask_transparent"  mc-on-click="hide" />
+	            var __mc__children_1 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_mask_transparent';
+	            __mc__attr['on-click'] = 'hide';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_1);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="weui_toast" />
+	            var __mc__children_2 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_toast';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 3
+
+
+	                // if scope.type != 'loading'
+	                if (scope.type != 'loading') {
+	                    // <i class="weui_icon_toast" />
+	                    var __mc__children_4 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_icon_toast';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    var __mc__new_el = new __mc_T_El('i', __mc__attr, __mc__children_4);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                } // endif 
+
+
+	                // if scope.type == 'loading'
+	                if (scope.type == 'loading') {
+	                    // <div class="weui_loading" />
+	                    var __mc__children_6 = [],
+	                        __mc__attr = {},
+	                        __mc__isBindObserve = false,
+	                        __mc__binderData = [];
+	                    __mc__attr['class'] = 'weui_loading';
+	                    __mc__attr['key'] = __mc__dom_id++;
+	                    (function(scope, tree) { // startTree 7
+
+
+	                        // for v in scope.loadingArr
+	                        var __mc__arr = __isArray(scope.loadingArr) ? scope.loadingArr : [];
+	                        for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
+	                            var v = __mc__arr[__mc__$ix_];
+	                            // <div mc-class="'weui_loading_leaf weui_loading_leaf_' + v" />
+	                            var __mc__children_8 = [],
+	                                __mc__attr = {},
+	                                __mc__isBindObserve = false,
+	                                __mc__binderData = [];
+	                            __mc__attr['class'] = 'weui_loading_leaf weui_loading_leaf_' + v;
+	                            __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'class', __mc__attr['class']);
+	                            __mc__attr['key'] = __mc__dom_id++;
+	                            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_8);
+	                            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                            tree.push(__mc__new_el);
+	                        } // endFor 
+	                    })(scope, __mc__children_6); // endTree 7
+	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
+	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                    tree.push(__mc__new_el);
+	                } // endif 
+
+	                // <p class="weui_toast_content"  mc-html="scope.msg" />
+	                var __mc__children_9 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_toast_content';
+	                __mc__attr['html'] = scope.msg;
+	                __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'html', __mc__attr['html']);
+	                __mc__attr['key'] = __mc__dom_id++;
+	                var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_9);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            })(scope, __mc__children_2); // endTree 3
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 按钮
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Button, View,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	Button = (function(superClass) {
+	  extend(Button, superClass);
+
+	  function Button() {
+	    return Button.__super__.constructor.apply(this, arguments);
+	  }
+
+	  Button.prototype.run = function() {
+	    return this.render(__webpack_require__(68));
+	  };
+
+	  return Button;
+
+	})(View);
+
+	module.exports = Button;
+
+	module.exports.viewName = 'button';
+
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui 按钮');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <div class="weui_cells" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 3
+
+	            // <a href="javascript:;"  class="weui_btn weui_btn_primary" />
+	            var __mc__children_3 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_primary';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 4
+
+	                tree.push('按钮');
+	            })(scope, __mc__children_3); // endTree 4
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_3);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_primary" />
+	            var __mc__children_5 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_primary';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 6
+
+	                tree.push('按钮');
+	            })(scope, __mc__children_5); // endTree 6
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_5);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_warn" />
+	            var __mc__children_7 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_warn';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 8
+
+	                tree.push('确认');
+	            })(scope, __mc__children_7); // endTree 8
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_7);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_warn" />
+	            var __mc__children_9 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_warn';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 10
+
+	                tree.push('确认');
+	            })(scope, __mc__children_9); // endTree 10
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_9);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_default" />
+	            var __mc__children_11 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_default';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 12
+
+	                tree.push('按钮');
+	            })(scope, __mc__children_11); // endTree 12
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_11);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <a href="javascript:;"  class="weui_btn weui_btn_disabled weui_btn_default" />
+	            var __mc__children_13 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['href'] = 'javascript:;';
+	            __mc__attr['class'] = 'weui_btn weui_btn_disabled weui_btn_default';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 14
+
+	                tree.push('按钮');
+	            })(scope, __mc__children_13); // endTree 14
+	            var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_13);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="button_sp_area" />
+	            var __mc__children_15 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'button_sp_area';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 16
+
+	                // <a href="javascript:;"  class="weui_btn weui_btn_plain_default" />
+	                var __mc__children_16 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['href'] = 'javascript:;';
+	                __mc__attr['class'] = 'weui_btn weui_btn_plain_default';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 17
+
+	                    tree.push('按钮');
+	                })(scope, __mc__children_16); // endTree 17
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_16);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <a href="javascript:;"  class="weui_btn weui_btn_plain_primary" />
+	                var __mc__children_18 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['href'] = 'javascript:;';
+	                __mc__attr['class'] = 'weui_btn weui_btn_plain_primary';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 19
+
+	                    tree.push('按钮');
+	                })(scope, __mc__children_18); // endTree 19
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_18);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <a href="javascript:;"  class="weui_btn weui_btn_mini weui_btn_primary" />
+	                var __mc__children_20 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['href'] = 'javascript:;';
+	                __mc__attr['class'] = 'weui_btn weui_btn_mini weui_btn_primary';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 21
+
+	                    tree.push('按钮');
+	                })(scope, __mc__children_20); // endTree 21
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_20);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	                // <a href="javascript:;"  class="weui_btn weui_btn_mini weui_btn_default" />
+	                var __mc__children_22 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['href'] = 'javascript:;';
+	                __mc__attr['class'] = 'weui_btn weui_btn_mini weui_btn_default';
+	                __mc__attr['key'] = __mc__dom_id++;
+	                (function(scope, tree) { // startTree 23
+
+	                    tree.push('按钮');
+	                })(scope, __mc__children_22); // endTree 23
+	                var __mc__new_el = new __mc_T_El('a', __mc__attr, __mc__children_22);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            })(scope, __mc__children_15); // endTree 16
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_15);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	        })(scope, __mc__children_2); // endTree 3
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 单选列表
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var CellsRadio, View,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	CellsRadio = (function(superClass) {
+	  extend(CellsRadio, superClass);
+
+	  function CellsRadio() {
+	    return CellsRadio.__super__.constructor.apply(this, arguments);
+	  }
+
+	  CellsRadio.prototype.run = function() {
+	    return this.render(__webpack_require__(70), {
+	      list: [
+	        {
+	          title: 'test 0',
+	          value: 0
+	        }, {
+	          title: 'test 1',
+	          value: 1
+	        }
+	      ]
+	    });
+	  };
+
+	  CellsRadio.prototype.changeValue = function(event, el, value) {
+	    return console.log(value);
+	  };
+
+	  return CellsRadio;
+
+	})(View);
+
+	module.exports = CellsRadio;
+
+	module.exports.viewName = 'cellsRadio';
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui 单选列表');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <cells-radio name="test"  value="1"  mc-on-change-value="changeValue"  mc-list="scope.list" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['name'] = 'test';
+	        __mc__attr['value'] = '1';
+	        __mc__attr['on-change-value'] = 'changeValue';
+	        __mc__attr['list'] = scope.list;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
+	        __mc__attr['key'] = __mc__dom_id++;
+	        var __mc__new_el = new __mc_T_El('cells-radio', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 复选列表
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var CellsCheckbox, View,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	CellsCheckbox = (function(superClass) {
+	  extend(CellsCheckbox, superClass);
+
+	  function CellsCheckbox() {
+	    return CellsCheckbox.__super__.constructor.apply(this, arguments);
+	  }
+
+	  CellsCheckbox.prototype.run = function() {
+	    return this.render(__webpack_require__(72), {
+	      list: [
+	        {
+	          title: 'test 0',
+	          value: 0
+	        }, {
+	          title: 'test 1',
+	          value: 1
+	        }, {
+	          title: 'test 2',
+	          value: 2
+	        }
+	      ],
+	      value: [1, 2]
+	    });
+	  };
+
+	  CellsCheckbox.prototype.changeValue = function(event, el, value) {
+	    return console.log(value);
+	  };
+
+	  return CellsCheckbox;
+
+	})(View);
+
+	module.exports = CellsCheckbox;
+
+	module.exports.viewName = 'cellsCheckbox';
+
+
+/***/ },
 /* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui 复选列表');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <cells-checkbox name="test"  mc-value="scope.value"  mc-on-change-value="changeValue"  mc-list="scope.list" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['name'] = 'test';
+	        __mc__attr['value'] = scope.value;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
+	        __mc__attr['on-change-value'] = 'changeValue';
+	        __mc__attr['list'] = scope.list;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
+	        __mc__attr['key'] = __mc__dom_id++;
+	        var __mc__new_el = new __mc_T_El('cells-checkbox', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 复选列表
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var CellsSwitch, View,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	CellsSwitch = (function(superClass) {
+	  extend(CellsSwitch, superClass);
+
+	  function CellsSwitch() {
+	    return CellsSwitch.__super__.constructor.apply(this, arguments);
+	  }
+
+	  CellsSwitch.prototype.run = function() {
+	    return this.render(__webpack_require__(74), {
+	      list: [
+	        {
+	          title: 'test 0',
+	          value: 0
+	        }, {
+	          title: 'test 1',
+	          value: 1
+	        }, {
+	          title: 'test 2',
+	          value: 2
+	        }
+	      ],
+	      value: [1, 2]
+	    });
+	  };
+
+	  CellsSwitch.prototype.changeValue = function(event, el, value) {
+	    return console.log(value);
+	  };
+
+	  return CellsSwitch;
+
+	})(View);
+
+	module.exports = CellsSwitch;
+
+	module.exports.viewName = 'cellsSwitch';
+
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui 多选开关');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <cells-switch name="test"  mc-value="scope.value"  mc-on-change-value="changeValue"  mc-list="scope.list" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['name'] = 'test';
+	        __mc__attr['value'] = scope.value;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
+	        __mc__attr['on-change-value'] = 'changeValue';
+	        __mc__attr['list'] = scope.list;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
+	        __mc__attr['key'] = __mc__dom_id++;
+	        var __mc__new_el = new __mc_T_El('cells-switch', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5803,7 +6285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  Validator.prototype.run = function() {
-	    return this.render(__webpack_require__(73));
+	    return this.render(__webpack_require__(76));
 	  };
 
 	  Validator.prototype.send = function(err, data) {
@@ -5823,7 +6305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 73 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6172,339 +6654,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 74 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * # 显示表单验证错误信息
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var Component, Validator,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	Component = __webpack_require__(45).Component;
-
-	Validator = (function(superClass) {
-	  extend(Validator, superClass);
-
-	  function Validator() {
-	    return Validator.__super__.constructor.apply(this, arguments);
-	  }
-
-	  Validator.prototype.getTarget = function() {
-	    return this.errData.$el.data('proxyEl') || this.errData.$el;
-	  };
-
-	  Validator.prototype.showError = function(errData) {
-	    var $el, $ft, $parent, $root;
-	    this.errData = errData;
-	    $el = this.getTarget().off('focus.weui_validator').focus();
-	    $parent = $el.parent();
-	    if ($parent.is('.weui_cell_bd')) {
-	      $root = $parent.parent().addClass('weui_cell_warn');
-	      $ft = $root.find('.weui_cell_ft');
-	      if ($ft.length === 0) {
-	        $ft = $('<div class="weui_cell_ft"><i class="weui_icon_warn"></i></div>');
-	        $ft.appendTo($root);
-	      }
-	      $ft.find('.weui_icon_warn').attr('title', this.errData.err).off('click.weui_validator').on('click.weui_validator', (function(_this) {
-	        return function() {
-	          return false;
-	        };
-	      })(this));
-	    } else {
-	      $el.addClass('weui_cell_warn');
-	      $el.attr('title', this.errData.err);
-	    }
-	    return $el.on('focus.weui_validator', (function(_this) {
-	      return function() {
-	        return _this.hideError();
-	      };
-	    })(this)).off('change.weui_validator').on('change.weui_validator', (function(_this) {
-	      return function() {
-	        return _this.hideError();
-	      };
-	    })(this));
-	  };
-
-	  Validator.prototype.hideError = function() {
-	    var $el, $parent;
-	    $el = this.getTarget();
-	    $parent = $el.parent();
-	    if ($parent.is('.weui_cell_bd')) {
-	      return $parent.parent().removeClass('weui_cell_warn');
-	    } else {
-	      $el.removeClass('weui_cell_warn');
-	      return $el.attr('title', '');
-	    }
-	  };
-
-	  return Validator;
-
-	})(Component);
-
-	module.exports = Validator;
-
-
-/***/ },
-/* 75 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * Toast
-	 * @author vfasky <vfasky@gmail.com>
-	 */
-	'use strict';
-	var Component, Toast, _loadingArr, _toast,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-
-	Component = __webpack_require__(45).Component;
-
-	_toast = null;
-
-	_loadingArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-
-	Toast = (function(superClass) {
-	  extend(Toast, superClass);
-
-	  function Toast(el, virtualEl) {
-	    this.el = el != null ? el : document.body;
-	    this.virtualEl = virtualEl != null ? virtualEl : null;
-	    Toast.__super__.constructor.call(this, this.el, this.virtualEl);
-	  }
-
-	  Toast.prototype.init = function() {
-	    return this.render(__webpack_require__(76), {
-	      show: false,
-	      msg: '',
-	      loadingArr: _loadingArr
-	    });
-	  };
-
-	  Toast.prototype.show = function(msg, type) {
-	    if (type == null) {
-	      type = 'toast';
-	    }
-	    this.set('msg', msg);
-	    this.set('type', type);
-	    return this.set('show', true);
-	  };
-
-	  Toast.prototype.hide = function() {
-	    return this.set('show', false);
-	  };
-
-	  return Toast;
-
-	})(Component);
-
-	Toast.loading = {
-	  show: function(msg) {
-	    if (msg == null) {
-	      msg = '数据加载中';
-	    }
-	    if (!_toast) {
-	      _toast = new Toast();
-	    }
-	    return _toast.show(msg, 'loading');
-	  },
-	  hide: function() {
-	    if (_toast) {
-	      return _toast.hide();
-	    }
-	  }
-	};
-
-	Toast.success = {
-	  show: function(msg) {
-	    if (!_toast) {
-	      _toast = new Toast();
-	    }
-	    return _toast.show(msg);
-	  },
-	  hide: function() {
-	    if (_toast) {
-	      return _toast.hide();
-	    }
-	  }
-	};
-
-	module.exports = Toast;
-
-
-/***/ },
-/* 76 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var mcore = __webpack_require__(45);
-	var __mc_T_El = mcore.virtualDom.Element;
-	var __mc_T_formatters = mcore.Template.formatters;
-	var __mc_T_binders = mcore.Template.binders;
-	var __objectKeys = mcore.util.objectKeys;
-	var __each = mcore.util.each;
-	var __isArray = mcore.util.isArray;
-
-	module.exports = function(scope, __mc__observe) {
-	    var __mc__children_0 = [];
-	    var __mc__binders = {};
-	    var __mc__dom_id = 0;
-
-	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
-	        if (__mc_T_binders.hasOwnProperty(key)) {
-	            __mc__isBindObserve = true;
-	            __mc__binderData.push({
-	                attrName: key,
-	                value: val
-	            });
-	        }
-	        return __mc__isBindObserve;
-	    };
-
-	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
-	        if (!__mc__isBindObserve) {
-	            var __mc__attr__keys = __objectKeys(__mc__attr);
-	            __each(__mc__attr__keys, function(attr) {
-	                if (attr.indexOf('on-') === 0) {
-	                    __mc__isBindObserve = true;
-	                }
-	            });
-	        }
-	        if (__mc__isBindObserve) {
-	            __mc__new_el.bindTemplate(__mc__observe);
-	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
-	                var __mc_v = __mc__binderData[__mc_i];
-	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
-	            }
-	        }
-	    };
-
-	    (function(scope, tree) { // startTree 0
-
-	        // <div mc-show="scope.show"  mc-class="scope.type == 'loading' ? 'weui_loading_toast': ''" />
-	        var __mc__children_0 = [],
-	            __mc__attr = {},
-	            __mc__isBindObserve = false,
-	            __mc__binderData = [];
-	        __mc__attr['show'] = scope.show;
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'show', __mc__attr['show']);
-	        __mc__attr['class'] = scope.type == 'loading' ? 'weui_loading_toast' : '';
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'class', __mc__attr['class']);
-	        __mc__attr['key'] = __mc__dom_id++;
-	        (function(scope, tree) { // startTree 1
-
-	            // <div class="weui_mask_transparent"  mc-on-click="hide" />
-	            var __mc__children_1 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['class'] = 'weui_mask_transparent';
-	            __mc__attr['on-click'] = 'hide';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_1);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	            // <div class="weui_toast" />
-	            var __mc__children_2 = [],
-	                __mc__attr = {},
-	                __mc__isBindObserve = false,
-	                __mc__binderData = [];
-	            __mc__attr['class'] = 'weui_toast';
-	            __mc__attr['key'] = __mc__dom_id++;
-	            (function(scope, tree) { // startTree 3
-
-
-	                // if scope.type != 'loading'
-	                if (scope.type != 'loading') {
-	                    // <i class="weui_icon_toast" />
-	                    var __mc__children_4 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_icon_toast';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    var __mc__new_el = new __mc_T_El('i', __mc__attr, __mc__children_4);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-	                } // endif 
-
-
-	                // if scope.type == 'loading'
-	                if (scope.type == 'loading') {
-	                    // <div class="weui_loading" />
-	                    var __mc__children_6 = [],
-	                        __mc__attr = {},
-	                        __mc__isBindObserve = false,
-	                        __mc__binderData = [];
-	                    __mc__attr['class'] = 'weui_loading';
-	                    __mc__attr['key'] = __mc__dom_id++;
-	                    (function(scope, tree) { // startTree 7
-
-
-	                        // for v in scope.loadingArr
-	                        var __mc__arr = __isArray(scope.loadingArr) ? scope.loadingArr : [];
-	                        for (var __mc__$ix_ = 0, len = __mc__arr.length; __mc__$ix_ < len; __mc__$ix_++) {
-	                            var v = __mc__arr[__mc__$ix_];
-	                            // <div mc-class="'weui_loading_leaf weui_loading_leaf_' + v" />
-	                            var __mc__children_8 = [],
-	                                __mc__attr = {},
-	                                __mc__isBindObserve = false,
-	                                __mc__binderData = [];
-	                            __mc__attr['class'] = 'weui_loading_leaf weui_loading_leaf_' + v;
-	                            __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'class', __mc__attr['class']);
-	                            __mc__attr['key'] = __mc__dom_id++;
-	                            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_8);
-	                            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                            tree.push(__mc__new_el);
-	                        } // endFor 
-	                    })(scope, __mc__children_6); // endTree 7
-	                    var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
-	                    __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                    tree.push(__mc__new_el);
-	                } // endif 
-
-	                // <p class="weui_toast_content"  mc-html="scope.msg" />
-	                var __mc__children_9 = [],
-	                    __mc__attr = {},
-	                    __mc__isBindObserve = false,
-	                    __mc__binderData = [];
-	                __mc__attr['class'] = 'weui_toast_content';
-	                __mc__attr['html'] = scope.msg;
-	                __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'html', __mc__attr['html']);
-	                __mc__attr['key'] = __mc__dom_id++;
-	                var __mc__new_el = new __mc_T_El('p', __mc__attr, __mc__children_9);
-	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	                tree.push(__mc__new_el);
-	            })(scope, __mc__children_2); // endTree 3
-	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
-	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	            tree.push(__mc__new_el);
-	        })(scope, __mc__children_0); // endTree 1
-	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
-	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
-	        tree.push(__mc__new_el);
-	    })(scope, __mc__children_0); // endTree 0
-
-
-	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
-	        var virtualDom = __mc__children_0[0];
-	    } else {
-	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
-	    }
-
-	    var templateDefined = {
-	        'virtualDom': virtualDom
-	    };
-	    return templateDefined;
-	};
-
-/***/ },
 /* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -6657,6 +6806,332 @@ return /******/ (function(modules) { // webpackBootstrap
 	            tree.push(__mc__new_el);
 	        })(scope, __mc__children_2); // endTree 3
 	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 79 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 *
+	 * dialog
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Dialog, View, weui,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	weui = __webpack_require__(47);
+
+	Dialog = (function(superClass) {
+	  extend(Dialog, superClass);
+
+	  function Dialog() {
+	    return Dialog.__super__.constructor.apply(this, arguments);
+	  }
+
+	  Dialog.prototype.run = function() {
+	    return this.render(__webpack_require__(80));
+	  };
+
+	  Dialog.prototype.showAlert = function() {
+	    weui.Dialog.alert('hello');
+	    return false;
+	  };
+
+	  Dialog.prototype.showConfirm = function() {
+	    return weui.Dialog.confirm('你的选择是？', function(ok) {
+	      return weui.Dialog.alert(ok && '你点了“确定”' || '你点了“取消”');
+	    });
+	  };
+
+	  return Dialog;
+
+	})(View);
+
+	module.exports = Dialog;
+
+	module.exports.viewName = 'dialog';
+
+
+/***/ },
+/* 80 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui Dialog');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <div class="weui_cells" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 3
+
+	            // <button class="weui_btn weui_btn_primary"  mc-on-click="showAlert" />
+	            var __mc__children_3 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_btn weui_btn_primary';
+	            __mc__attr['on-click'] = 'showAlert';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 4
+
+	                tree.push('Alert');
+	            })(scope, __mc__children_3); // endTree 4
+	            var __mc__new_el = new __mc_T_El('button', __mc__attr, __mc__children_3);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <button class="weui_btn weui_btn_primary"  mc-on-click="showConfirm" />
+	            var __mc__children_5 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_btn weui_btn_primary';
+	            __mc__attr['on-click'] = 'showConfirm';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 6
+
+	                tree.push('Confirm');
+	            })(scope, __mc__children_5); // endTree 6
+	            var __mc__new_el = new __mc_T_El('button', __mc__attr, __mc__children_5);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	        })(scope, __mc__children_2); // endTree 3
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 81 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * 首页
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Home, View,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	Home = (function(superClass) {
+	  extend(Home, superClass);
+
+	  function Home() {
+	    return Home.__super__.constructor.apply(this, arguments);
+	  }
+
+	  Home.prototype.run = function() {
+	    return this.render(__webpack_require__(82), {
+	      list: [
+	        {
+	          url: '#/button',
+	          title: '按钮',
+	          desc: '直接调用，没有封装'
+	        }, {
+	          url: '#/cells-radio',
+	          title: '单选列表'
+	        }, {
+	          url: '#/cells-checkbox',
+	          title: '复选列表'
+	        }, {
+	          url: '#/cells-switch',
+	          title: '多选开关'
+	        }, {
+	          url: '#/validator',
+	          title: '表单验证'
+	        }, {
+	          url: '#/toast',
+	          title: 'Toast',
+	          desc: '成功提示，及loading'
+	        }, {
+	          url: '#/dialog',
+	          title: 'Dialog',
+	          desc: 'alert，confirm'
+	        }
+	      ]
+	    });
+	  };
+
+	  return Home;
+
+	})(View);
+
+	module.exports = Home;
+
+	module.exports.viewName = 'home';
+
+
+/***/ },
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui 组件列表');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <cells mc-list="scope.list" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['list'] = scope.list;
+	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
+	        __mc__attr['key'] = __mc__dom_id++;
+	        var __mc__new_el = new __mc_T_El('cells', __mc__attr, __mc__children_2);
 	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	        tree.push(__mc__new_el);
 	    })(scope, __mc__children_0); // endTree 0

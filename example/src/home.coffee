@@ -36,6 +36,11 @@ class Home extends View
                     title: 'Toast'
                     desc: '成功提示，及loading'
                 }
+                {
+                    url: '#/dialog'
+                    title: 'Dialog'
+                    desc: 'alert，confirm'
+                }
             ]
 
 
