@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	app = new App($('body'));
 
-	app.route('/button', __webpack_require__(67)).route('/cells-radio', __webpack_require__(69)).route('/cells-checkbox', __webpack_require__(71)).route('/cells-switch', __webpack_require__(73)).route('/validator', __webpack_require__(75)).route('/toast', __webpack_require__(77)).route('/dialog', __webpack_require__(79)).route('*', __webpack_require__(81));
+	app.route('/button', __webpack_require__(67)).route('/cells-radio', __webpack_require__(69)).route('/cells-checkbox', __webpack_require__(71)).route('/cells-switch', __webpack_require__(73)).route('/validator', __webpack_require__(75)).route('/toast', __webpack_require__(77)).route('/dialog', __webpack_require__(79)).route('/progress-bar', __webpack_require__(89)).route('*', __webpack_require__(81));
 
 	app.run();
 
@@ -3210,7 +3210,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  CellsSwitch: __webpack_require__(60),
 	  Validator: __webpack_require__(62),
 	  Toast: __webpack_require__(65),
-	  Dialog: __webpack_require__(63)
+	  Dialog: __webpack_require__(63),
+	  ProgressBar: __webpack_require__(88)
 	};
 
 
@@ -7045,6 +7046,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          url: '#/dialog',
 	          title: 'Dialog',
 	          desc: 'alert，confirm'
+	        }, {
+	          url: '#/progress-bar',
+	          title: '进度条'
 	        }
 	      ]
 	    });
@@ -7132,6 +7136,407 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'list', __mc__attr['list']);
 	        __mc__attr['key'] = __mc__dom_id++;
 	        var __mc__new_el = new __mc_T_El('cells', __mc__attr, __mc__children_2);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_progress" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_progress';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            // <div class="weui_progress_bar" />
+	            var __mc__children_1 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_progress_bar';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 2
+
+	                // <div class="weui_progress_inner_bar"  mc-style="'width:' + (scope.progress || 0) + '%'" />
+	                var __mc__children_2 = [],
+	                    __mc__attr = {},
+	                    __mc__isBindObserve = false,
+	                    __mc__binderData = [];
+	                __mc__attr['class'] = 'weui_progress_inner_bar';
+	                __mc__attr['style'] = (function(x) {
+	                    return x;
+	                })('width:' + (scope.progress || 0) + '%');
+	                __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'style', __mc__attr['style']);
+	                __mc__attr['key'] = __mc__dom_id++;
+	                var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
+	                __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	                tree.push(__mc__new_el);
+	            })(scope, __mc__children_1); // endTree 2
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_1);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	    })(scope, __mc__children_0); // endTree 0
+
+
+	    if (__mc__children_0.length === 1 && __mc__children_0[0].render) {
+	        var virtualDom = __mc__children_0[0];
+	    } else {
+	        var virtualDom = new __mc_T_El('mc-vd', {}, __mc__children_0);
+	    }
+
+	    var templateDefined = {
+	        'virtualDom': virtualDom
+	    };
+	    return templateDefined;
+	};
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 *
+	 * 进度条
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var Component, ProgressBar, Template, ref, util,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	ref = __webpack_require__(45), Component = ref.Component, Template = ref.Template, util = ref.util;
+
+	ProgressBar = (function(superClass) {
+	  extend(ProgressBar, superClass);
+
+	  function ProgressBar() {
+	    return ProgressBar.__super__.constructor.apply(this, arguments);
+	  }
+
+	  ProgressBar.prototype.init = function() {
+	    return this.render(__webpack_require__(87));
+	  };
+
+	  ProgressBar.prototype.watch = function() {
+	    return this.on('change:value', function(value) {
+	      if (util.isNumber(value)) {
+	        return this.set('progress', value);
+	      }
+	    });
+	  };
+
+	  return ProgressBar;
+
+	})(Component);
+
+	Template.components['progress-bar'] = ProgressBar;
+
+	module.exports = ProgressBar;
+
+
+/***/ },
+/* 89 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 *
+	 * progress
+	 * @author vfasky <vfasky@gmail.com>
+	 */
+	'use strict';
+	var ProgressBar, View,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+
+	View = __webpack_require__(45).View;
+
+	ProgressBar = (function(superClass) {
+	  extend(ProgressBar, superClass);
+
+	  function ProgressBar() {
+	    return ProgressBar.__super__.constructor.apply(this, arguments);
+	  }
+
+	  ProgressBar.prototype.init = function() {
+	    return this.time = setInterval((function(_this) {
+	      return function() {
+	        var value;
+	        value = parseInt(_this.get('value'));
+	        if (value >= 100) {
+	          value = 0;
+	        } else {
+	          value += 5;
+	        }
+	        return _this.set('value', value);
+	      };
+	    })(this), 100);
+	  };
+
+	  ProgressBar.prototype.run = function() {
+	    return this.render(__webpack_require__(90), {
+	      value: 0
+	    });
+	  };
+
+	  ProgressBar.prototype.destroy = function() {
+	    clearInterval(this.time);
+	    return ProgressBar.__super__.destroy.call(this);
+	  };
+
+	  return ProgressBar;
+
+	})(View);
+
+	module.exports = ProgressBar;
+
+	module.exports.viewName = 'progressBar';
+
+
+/***/ },
+/* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mcore = __webpack_require__(45);
+	var __mc_T_El = mcore.virtualDom.Element;
+	var __mc_T_formatters = mcore.Template.formatters;
+	var __mc_T_binders = mcore.Template.binders;
+	var __objectKeys = mcore.util.objectKeys;
+	var __each = mcore.util.each;
+	var __isArray = mcore.util.isArray;
+
+	module.exports = function(scope, __mc__observe) {
+	    var __mc__children_0 = [];
+	    var __mc__binders = {};
+	    var __mc__dom_id = 0;
+
+	    var __parserBinders = function(__mc__binderData, __mc__isBindObserve, key, val) {
+	        if (__mc_T_binders.hasOwnProperty(key)) {
+	            __mc__isBindObserve = true;
+	            __mc__binderData.push({
+	                attrName: key,
+	                value: val
+	            });
+	        }
+	        return __mc__isBindObserve;
+	    };
+
+	    var __bindBinder = function(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData) {
+	        if (!__mc__isBindObserve) {
+	            var __mc__attr__keys = __objectKeys(__mc__attr);
+	            __each(__mc__attr__keys, function(attr) {
+	                if (attr.indexOf('on-') === 0) {
+	                    __mc__isBindObserve = true;
+	                }
+	            });
+	        }
+	        if (__mc__isBindObserve) {
+	            __mc__new_el.bindTemplate(__mc__observe);
+	            for (var __mc_i = 0, __mc_len = __mc__binderData.length; __mc_i < __mc_len; __mc_i++) {
+	                var __mc_v = __mc__binderData[__mc_i];
+	                __mc__new_el.bindBinder(__mc_v.attrName, __mc_v.value);
+	            }
+	        }
+	    };
+
+	    (function(scope, tree) { // startTree 0
+
+	        // <div class="weui_cells_title" />
+	        var __mc__children_0 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells_title';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 1
+
+	            tree.push('weui Progress');
+	        })(scope, __mc__children_0); // endTree 1
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_0);
+	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	        tree.push(__mc__new_el);
+	        // <div class="weui_cells" />
+	        var __mc__children_2 = [],
+	            __mc__attr = {},
+	            __mc__isBindObserve = false,
+	            __mc__binderData = [];
+	        __mc__attr['class'] = 'weui_cells';
+	        __mc__attr['key'] = __mc__dom_id++;
+	        (function(scope, tree) { // startTree 3
+
+	            // <div class="weui_cells_title" />
+	            var __mc__children_3 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_cells_title';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 4
+
+	                tree.push(' 0 % ');
+	            })(scope, __mc__children_3); // endTree 4
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_3);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <progress-bar/>
+	            var __mc__children_5 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['key'] = __mc__dom_id++;
+	            var __mc__new_el = new __mc_T_El('progress-bar', __mc__attr, __mc__children_5);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="weui_cells_title" />
+	            var __mc__children_6 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_cells_title';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 7
+
+	                tree.push(' 10 % ');
+	            })(scope, __mc__children_6); // endTree 7
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_6);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <progress-bar value="10" />
+	            var __mc__children_8 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['value'] = '10';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            var __mc__new_el = new __mc_T_El('progress-bar', __mc__attr, __mc__children_8);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="weui_cells_title" />
+	            var __mc__children_9 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_cells_title';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 10
+
+	                tree.push(' 90 % ');
+	            })(scope, __mc__children_9); // endTree 10
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_9);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <progress-bar value="90" />
+	            var __mc__children_11 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['value'] = '90';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            var __mc__new_el = new __mc_T_El('progress-bar', __mc__attr, __mc__children_11);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <div class="weui_cells_title" />
+	            var __mc__children_12 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['class'] = 'weui_cells_title';
+	            __mc__attr['key'] = __mc__dom_id++;
+	            (function(scope, tree) { // startTree 13
+
+	                tree.push(' loading ');
+	            })(scope, __mc__children_12); // endTree 13
+	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_12);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	            // <progress-bar mc-value="scope.value" />
+	            var __mc__children_14 = [],
+	                __mc__attr = {},
+	                __mc__isBindObserve = false,
+	                __mc__binderData = [];
+	            __mc__attr['value'] = scope.value;
+	            __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'value', __mc__attr['value']);
+	            __mc__attr['key'] = __mc__dom_id++;
+	            var __mc__new_el = new __mc_T_El('progress-bar', __mc__attr, __mc__children_14);
+	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
+	            tree.push(__mc__new_el);
+	        })(scope, __mc__children_2); // endTree 3
+	        var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_2);
 	        __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	        tree.push(__mc__new_el);
 	    })(scope, __mc__children_0); // endTree 0

@@ -17,6 +17,7 @@ app.route '/button', require './button'
    .route '/validator', require './validator'
    .route '/toast', require './toast'
    .route '/dialog', require './dialog'
+   .route '/progress-bar', require './progressBar'
    .route '*', require './home'
 
 app.run()

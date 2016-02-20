@@ -41,6 +41,10 @@ class Home extends View
                     title: 'Dialog'
                     desc: 'alert，confirm'
                 }
+                {
+                    url: '#/progress-bar'
+                    title: '进度条'
+                }
             ]
 
 

@@ -21,3 +21,4 @@ module.exports =
     Validator: require './validator'
     Toast: require './toast'
     Dialog: require './dialog'
+    ProgressBar: require './progressBar'
