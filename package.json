@@ -1,6 +1,6 @@
 {
   "name": "mcore-weui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "基于微信UI的mcore样式库",
   "main": "dist/mcore-weui.js",
   "scripts": {

@@ -1,8 +1,8 @@
-<div mc-show="scope.show">
-    <div class="weui_mask_transition weui_fade_toggle" style="display:block">
+<div >
+    <div mc-class="'weui_mask_transition ' + (scope.show ? 'weui_fade_toggle' : '')" mc-style="'display:' + (scope.show ? 'block': 'none')">
     </div>
 
-    <div class="weui_actionsheet weui_actionsheet_toggle">
+    <div mc-class="'weui_actionsheet ' + (scope.show ? 'weui_actionsheet_toggle' : '')">
         <div class="weui_actionsheet_menu">
             <div class="weui_actionsheet_cell"
                  mc-on-click="clickMenu(v)"

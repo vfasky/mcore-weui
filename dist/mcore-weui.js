@@ -2705,33 +2705,34 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    (function(scope, tree) { // startTree 0
 
-	        // <div mc-show="scope.show" />
+	        // <div/>
 	        var __mc__children_0 = [],
 	            __mc__attr = {},
 	            __mc__isBindObserve = false,
 	            __mc__binderData = [];
-	        __mc__attr['show'] = scope.show;
-	        __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'show', __mc__attr['show']);
 	        __mc__attr['key'] = __mc__dom_id++;
 	        (function(scope, tree) { // startTree 1
 
-	            // <div class="weui_mask_transition weui_fade_toggle"  style="display:block" />
+	            // <div mc-class="'weui_mask_transition ' + (scope.show ? 'weui_fade_toggle' : '')"  mc-style="'display:' + (scope.show ? 'block': 'none')" />
 	            var __mc__children_1 = [],
 	                __mc__attr = {},
 	                __mc__isBindObserve = false,
 	                __mc__binderData = [];
-	            __mc__attr['class'] = 'weui_mask_transition weui_fade_toggle';
-	            __mc__attr['style'] = 'display:block';
+	            __mc__attr['class'] = 'weui_mask_transition ' + (scope.show ? 'weui_fade_toggle' : '');
+	            __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'class', __mc__attr['class']);
+	            __mc__attr['style'] = 'display:' + (scope.show ? 'block' : 'none');
+	            __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'style', __mc__attr['style']);
 	            __mc__attr['key'] = __mc__dom_id++;
 	            var __mc__new_el = new __mc_T_El('div', __mc__attr, __mc__children_1);
 	            __bindBinder(__mc__new_el, __mc__attr, __mc__isBindObserve, __mc__binderData);
 	            tree.push(__mc__new_el);
-	            // <div class="weui_actionsheet weui_actionsheet_toggle" />
+	            // <div mc-class="'weui_actionsheet ' + (scope.show ? 'weui_actionsheet_toggle' : '')" />
 	            var __mc__children_2 = [],
 	                __mc__attr = {},
 	                __mc__isBindObserve = false,
 	                __mc__binderData = [];
-	            __mc__attr['class'] = 'weui_actionsheet weui_actionsheet_toggle';
+	            __mc__attr['class'] = 'weui_actionsheet ' + (scope.show ? 'weui_actionsheet_toggle' : '');
+	            __mc__isBindObserve = __parserBinders(__mc__binderData, __mc__isBindObserve, 'class', __mc__attr['class']);
 	            __mc__attr['key'] = __mc__dom_id++;
 	            (function(scope, tree) { // startTree 3
 
