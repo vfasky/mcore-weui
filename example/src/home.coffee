@@ -45,6 +45,10 @@ class Home extends View
                     url: '#/progress-bar'
                     title: '进度条'
                 }
+                {
+                    url: '#/actionSheet'
+                    title: 'ActionSheet'
+                }
             ]
 
 

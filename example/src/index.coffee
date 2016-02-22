@@ -18,6 +18,7 @@ app.route '/button', require './button'
    .route '/toast', require './toast'
    .route '/dialog', require './dialog'
    .route '/progress-bar', require './progressBar'
+   .route '/actionSheet', require './actionSheet'
    .route '*', require './home'
 
 app.run()

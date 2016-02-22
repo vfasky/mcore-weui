@@ -21,7 +21,7 @@ class ProgressBar extends View
         , 100
 
     run: ->
-        @render require('../tpl/progress-bar.html'),
+        @render require('../tpl/progressBar.html'),
             value: 0
 
     destroy: ->

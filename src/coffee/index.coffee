@@ -22,3 +22,4 @@ module.exports =
     Toast: require './toast'
     Dialog: require './dialog'
     ProgressBar: require './progressBar'
+    ActionSheet: require './actionSheet'

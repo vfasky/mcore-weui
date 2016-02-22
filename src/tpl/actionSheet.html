@@ -1,0 +1,20 @@
+<div mc-show="scope.show">
+    <div class="weui_mask_transition weui_fade_toggle" style="display:block">
+    </div>
+
+    <div class="weui_actionsheet weui_actionsheet_toggle">
+        <div class="weui_actionsheet_menu">
+            <div class="weui_actionsheet_cell"
+                 mc-on-click="clickMenu(v)"
+                 mc-for="v in scope.list">
+                {v.title}
+            </div>
+        </div>
+
+        <div class="weui_actionsheet_action">
+            <div class="weui_actionsheet_cell" mc-on-click="hide">
+                取消
+            </div>
+        </div>
+    </div>
+</div>
