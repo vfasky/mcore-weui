@@ -1,3 +1,5 @@
+var webpack = require('webpack');
+
 module.exports = {
     entry: {
         'demo': './src/index',
@@ -9,6 +11,7 @@ module.exports = {
     },
     resolve: {
         extensions: ['', '.coffee', '.js'],
+        jquery: 'jQuery',
         alias: {
             'mcore-weui': __dirname + '/../src/coffee/index',
             'mcoreapp': __dirname + '/../node_modules/mcoreapp/dist/mcoreApp.js',
@@ -27,5 +30,14 @@ module.exports = {
             loader: 'h2svd-loader'
         }]
     },
-    externals: ['jquery']
+    externals: {
+        jquery: 'jQuery'
+    },
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        })
+    ]
 };
